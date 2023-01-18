@@ -1,0 +1,1 @@
+These repo holds all helm charts used for deploying the car-rental application. Additionally a run_helm.sh script is provided which updates alle helm dependencies and installs helm charts to the currently selected cluster by the kubectl cli. 

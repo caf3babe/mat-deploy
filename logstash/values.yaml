@@ -1,0 +1,24 @@
+logstash:
+  extraPorts: 
+    - name: input
+      containerPort: 5000
+  logstashPipeline:
+    logstash.conf: |-
+      input {
+        tcp {
+          port => 5000
+          codec => json_lines
+        }
+      }
+  
+      filter {
+        mutate {
+          add_tag => [ "car-rental-microservices" ]
+        }
+      }
+  
+      output {
+        elasticsearch {
+          hosts => [ "zipkin-elasticsearch-master.tracing:9200" ]
+        }
+      }
