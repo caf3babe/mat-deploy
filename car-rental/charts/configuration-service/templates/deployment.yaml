@@ -41,12 +41,16 @@ spec:
             httpGet:
               path: /actuator
               port: {{ .Values.service.port }}
-            initialDelaySeconds: 60
           readinessProbe:
             httpGet:
               path: /actuator
               port: {{ .Values.service.port }}
-            initialDelaySeconds: 60
+          startupProbe:
+            httpGet:
+              path: /actuator
+              port: {{ .Values.service.port }}
+            failureThreshold: 100
+            periodSeconds: 3
           env:
             {{- range .Values.env }}
             - name: {{ .name }}

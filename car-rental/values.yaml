@@ -1,0 +1,145 @@
+# Values for the Spring Cloud Config microservice
+configuration-service:
+  resources:
+    requests:
+      memory: 500Mi
+
+# Values for the Netflix Eureka discovery microservice
+discovery-service:
+  resources:
+    requests:
+      memory: 500Mi
+
+# Values for the Authentication microservice
+authentication-service:
+  resources:
+    requests:
+      memory: 500Mi
+
+# Values for the Converter microservice
+converter:
+  resources:
+    requests:
+      memory: 0Mi
+
+# Values for the Car microservice
+car-service:
+  resources:
+    requests:
+      memory: 500Mi
+  env:
+    - name: spring_profiles_active
+      value: "prod"
+    - name: spring_cloud_config_uri
+      value: http://car-rental-configuration-service:8071
+    - name: spring_rabbitmq_username
+      value: guest
+    - name: spring_rabbitmq_password 
+      value: guest
+
+# Values for the Currency microservice
+currency-service:
+  resources:
+    requests:
+      memory: 500Mi
+  env:
+    - name: spring_profiles_active
+      value: "prod"
+    - name: spring_cloud_config_uri
+      value: http://car-rental-configuration-service:8071
+    - name: spring_rabbitmq_username
+      value: guest
+    - name: spring_rabbitmq_password 
+      value: guest
+
+# Values for the Order microservice
+order-service:
+  resources:
+    requests:
+      memory: 500Mi
+  env:
+    - name: spring_profiles_active
+      value: "prod"
+    - name: spring_cloud_config_uri
+      value: http://car-rental-configuration-service:8071
+    - name: spring_rabbitmq_username
+      value: guest
+    - name: spring_rabbitmq_password 
+      value: guest
+
+# Values for the Location microservice
+location-service:
+  resources:
+    requests:
+      memory: 500Mi
+  env:
+    - name: spring_profiles_active
+      value: "prod"
+    - name: spring_cloud_config_uri
+      value: http://car-rental-configuration-service:8071
+    - name: spring_rabbitmq_username
+      value: guest
+    - name: spring_rabbitmq_password 
+      value: guest
+
+# Values for the Opening Hours microservice
+opening-hours-service:
+  resources:
+    requests:
+      memory: 500Mi
+  env:
+    - name: spring_profiles_active
+      value: "prod"
+    - name: spring_cloud_config_uri
+      value: http://car-rental-configuration-service:8071
+    - name: spring_rabbitmq_username
+      value: guest
+    - name: spring_rabbitmq_password 
+      value: guest
+
+# Values for the Spring Cloud Gateway deployment
+api-gateway:
+  service:
+    livenessProbe:
+      initialDelaySeconds: 15
+    readinessProbe:
+      initialDelaySeconds:
+   
+  resources:
+    requests:
+      memory: 500Mi
+  env:
+    - name: spring_profiles_active
+      value: "prod"
+    - name: spring_cloud_config_uri
+      value: http://car-rental-configuration-service:8071
+
+  ingress:
+    enabled: true
+    className: contour
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: mat-app-flagger-prod.westeurope.cloudapp.azure.com
+        paths:
+          - path: /api/
+            pathType: ImplementationSpecific
+  initContainers:
+  - name: wait-for-configuration-service
+    image: badouralix/curl-jq
+    command: ['sh', '-c', 'while ! curl http://car-rental-configuration-service:8071/api-gateway/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
+  - name: wait-for-discovery-service
+    image: busybox
+    command: ['sh', '-c', 'while ! nc -z car-rental-discovery-service 8070; do sleep 2; done']
+
+# Values for the Angular frontend deployment
+frontend:
+  service:
+    livenessProbe:
+      initialDelaySeconds: 2
+    readinessProbe:
+      initialDelaySeconds: 
+  resources:
+    requests:
+      memory: 100Mi

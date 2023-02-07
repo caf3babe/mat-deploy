@@ -1,24 +1,33 @@
-logstash:
-  extraPorts: 
-    - name: input
-      containerPort: 5000
-  logstashPipeline:
-    logstash.conf: |-
-      input {
-        tcp {
-          port => 5000
-          codec => json_lines
-        }
+extraPorts:
+  - name: pipeline
+    containerPort: 5000
+service:
+  annotations: {}
+  type: ClusterIP
+  loadBalancerIP: ""
+  ports:
+    - name: pipeline
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+
+logstashPipeline:
+  logstash.conf: |-
+    input {
+      tcp {
+        port => 5000
+        codec => json_lines
       }
-  
-      filter {
-        mutate {
-          add_tag => [ "car-rental-microservices" ]
-        }
+    }
+
+    filter {
+      mutate {
+        add_tag => [ "car-rental" ]
       }
-  
-      output {
-        elasticsearch {
-          hosts => [ "zipkin-elasticsearch-master.tracing:9200" ]
-        }
+    }
+
+    output {
+      elasticsearch {
+        hosts => [ "elasticsearch-master.elastic:9200" ]
       }
+    }

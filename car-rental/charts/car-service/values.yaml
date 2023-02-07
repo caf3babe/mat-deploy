@@ -83,10 +83,10 @@ tolerations: []
 affinity: {}
 
 env:
-  - name: spring_profiles_active
-    value: "prod"
-  - name: spring_cloud_config_uri
-    value: http://car-rental-configuration-service:8071
+#   - name: spring_profiles_active
+#     value: "prod"
+#   - name: spring_cloud_config_uri
+#     value: http://car-rental-configuration-service:8071
   
 mongodb:
   nameOverride: car-service-db
