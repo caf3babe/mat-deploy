@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/caf3babe/mat-app-currency-service:main
+  repository: ghcr.io/caf3babe/mat-app-configuration-service:main
   pullPolicy: Always
   tag: ""
 
@@ -20,6 +20,10 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
+resources:
+  requests: 
+    memory: 500Mi
+
 securityContext: {}
   # capabilities:
   #   drop:
@@ -30,7 +34,7 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 8080
+  port: 8071
 
 autoscaling:
   enabled: false
@@ -49,22 +53,4 @@ env:
   - name: spring_profiles_active
     value: "prod"
   - name: spring_cloud_config_uri
-    value: http://car-rental-configuration-service:8071
-
-mongodb:
-  nameOverride: currency-service-db
-  auth:
-    rootPassword: example
-  livenessProbe:
-    timeoutSeconds: 30
-  readinessProbe:
-    timeoutSeconds: 30
-
-
-initContainers:
-- name: wait-for-configuration-service
-  image: badouralix/curl-jq
-  command: ['sh', '-c', 'while ! curl http://car-rental-configuration-service:8071/currency-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
-- name: wait-for-discovery-service
-  image: busybox
-  command: ['sh', '-c', 'while ! nc -z car-rental-discovery-service 8070; do sleep 2; done']
+    value: http://configuration-service:8071

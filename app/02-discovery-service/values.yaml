@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/caf3babe/mat-app-location-service:main
+  repository: ghcr.io/caf3babe/mat-app-discovery-service:main
   pullPolicy: Always
   tag: ""
 
@@ -30,14 +30,14 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 8082
+  port: 8070
 
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
@@ -49,21 +49,13 @@ env:
   - name: spring_profiles_active
     value: "prod"
   - name: spring_cloud_config_uri
-    value: http://car-rental-configuration-service:8071
-
-mongodb:
-  nameOverride: location-service-db
-  auth:
-    rootPassword: example
-  livenessProbe:
-    timeoutSeconds: 30
-  readinessProbe:
-    timeoutSeconds: 30
+    value: http://configuration-service:8071
 
 initContainers:
 - name: wait-for-configuration-service
   image: badouralix/curl-jq
-  command: ['sh', '-c', 'while ! curl http://car-rental-configuration-service:8071/location-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
-- name: wait-for-discovery-service
-  image: busybox
-  command: ['sh', '-c', 'while ! nc -z car-rental-discovery-service 8070; do sleep 2; done']
+  command: ['sh', '-c', 'while ! curl http://configuration-service:8071/authentication-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
+
+resources:
+  requests: 
+    memory: 500Mi

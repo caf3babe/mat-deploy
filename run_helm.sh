@@ -34,4 +34,3 @@ helm upgrade -i --atomic --create-namespace --namespace elastic -f ./logstash/va
 
 helm upgrade -i --atomic --create-namespace --namespace monitoring kube-prometheus-stack ./kube-prometheus-stack 
 helm upgrade -i --atomic --create-namespace --namespace cert-manager ./cert-manager 
-helm upgrade -i --atomic --create-namespace --namespace apps car-rental ./car-rental

@@ -1,12 +1,13 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/caf3babe/mat-app-authentication-service:main
+  repository: ghcr.io/caf3babe/mat-app-api-gateway:main
   pullPolicy: Always
   tag: ""
 
 imagePullSecrets: 
 - name: dockerconfigjson-github-com
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -30,7 +31,19 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 8085
+  port: 8079
+  livenessProbe:
+    initialDelaySeconds: 15
+  readinessProbe:
+    initialDelaySeconds:  
+
+resources:
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 500Mi
 
 autoscaling:
   enabled: false
@@ -49,21 +62,22 @@ env:
   - name: spring_profiles_active
     value: "prod"
   - name: spring_cloud_config_uri
-    value: http://car-rental-configuration-service:8071
-
-mongodb:
-  nameOverride: authentication-service-db
-  auth:
-    rootPassword: example
-  livenessProbe:
-    timeoutSeconds: 30
-  readinessProbe:
-    timeoutSeconds: 30
-
+    value: http://configuration-service:8071
+ingress:
+  enabled: true
+  className: contour
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: mat-app-flagger-prod.westeurope.cloudapp.azure.com
+      paths:
+        - path: /api/
+          pathType: ImplementationSpecific
 initContainers:
 - name: wait-for-configuration-service
   image: badouralix/curl-jq
-  command: ['sh', '-c', 'while ! curl http://car-rental-configuration-service:8071/authentication-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
+  command: ['sh', '-c', 'while ! curl http://configuration-service:8071/api-gateway/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
 - name: wait-for-discovery-service
   image: busybox
-  command: ['sh', '-c', 'while ! nc -z car-rental-discovery-service 8070; do sleep 2; done']
+  command: ['sh', '-c', 'while ! nc -z discovery-service 8070; do sleep 2; done']
