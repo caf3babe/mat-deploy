@@ -54,6 +54,8 @@ env:
     value: guest
   - name: spring_rabbitmq_password 
     value: guest
+  - name: app_loki_baseurl
+    value: http://loki-write.logging:3100/loki/api/v1/push
 
 mongodb:
   nameOverride: order-service-db

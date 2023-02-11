@@ -54,3 +54,5 @@ env:
     value: "prod"
   - name: spring_cloud_config_uri
     value: http://configuration-service:8071
+  - name: app_loki_baseurl
+    value: http://loki-write.logging:3100/loki/api/v1/push
