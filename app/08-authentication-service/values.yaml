@@ -54,7 +54,7 @@ env:
     value: http://loki-write.logging:3100/loki/api/v1/push
 
 mongodb:
-  nameOverride: authentication-service-db
+  fullnameOverride: authentication-service-db
   auth:
     rootPassword: example
   livenessProbe:

@@ -84,7 +84,7 @@ affinity: {}
 
 env:
   - name: spring_profiles_active
-    value: "prod"
+    value: prod
   - name: spring_cloud_config_uri
     value: http://configuration-service.apps:8071
   - name: spring_rabbitmq_username
@@ -95,7 +95,7 @@ env:
     value: http://loki-write.logging:3100/loki/api/v1/push
   
 mongodb:
-  nameOverride: car-service-db
+  fullnameOverride: car-service-db
   auth:
     rootPassword: example
   livenessProbe:
