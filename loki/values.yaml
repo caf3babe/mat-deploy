@@ -1,5 +1,5 @@
 write:
-  replicas: 1
+  replicas: 2
 read:
   replicas: 1
 backend:
@@ -8,3 +8,5 @@ gateway:
   replicas: 1
 minio:
   replicas: 1
+loki:
+  auth_enabled: false

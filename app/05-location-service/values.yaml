@@ -49,7 +49,7 @@ env:
   - name: spring_profiles_active
     value: "prod"
   - name: spring_cloud_config_uri
-    value: http://configuration-service:8071
+    value: http://configuration-service.apps:8071
   - name: spring_rabbitmq_username
     value: guest
   - name: spring_rabbitmq_password 
@@ -69,10 +69,10 @@ mongodb:
 initContainers:
 - name: wait-for-configuration-service
   image: badouralix/curl-jq
-  command: ['sh', '-c', 'while ! curl http://configuration-service:8071/location-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
+  command: ['sh', '-c', 'while ! curl http://configuration-service.apps:8071/location-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
 - name: wait-for-discovery-service
   image: busybox
-  command: ['sh', '-c', 'while ! nc -z discovery-service 8070; do sleep 2; done']
+  command: ['sh', '-c', 'while ! nc -z discovery-service.apps 8070; do sleep 2; done']
 
 resources:
   requests:
