@@ -1,0 +1,5 @@
+meshProvider: istio
+ingressClass: istio
+prometheus:
+  install: false
+metricsServer: http://kube-prometheus-stack-prometheus.monitoring:9090

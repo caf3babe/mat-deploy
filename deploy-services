@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+set -e
+
+# for DIR in ./* ; do
+#   [ ! -d "${DIR}" ] && continue
+#   echo "Helm building dependencies"
+#   helm dependency update "${DIR}"
+
+#   echo "Looking for subcharts"
+#   for SUB_DIR in ${DIR}/charts/* ; do
+#     [ ! -d "${SUB_DIR}" ] && continue
+#     echo "Helm building dependencies"
+#     helm dependency update "${SUB_DIR}"
+#   done
+
+# done
+
+update_install_chart() {
+  local release_name="${1}"
+  shift || true
+  local chart_name="${1}"
+  shift || true
+  local namespace="${1}"
+  shift || true
+  local values_file="${1}"
+  shift || true
+  local additional_args="$*"
+  helm upgrade -i "${release_name}" "${chart_name}" \
+    --atomic --namespace "${namespace}" --create-namespace --values "${values_file}" ${additional_args}
+}
+
+env="${1}"
+
+shift 1 || true
+
+case "${env}" in
+"flagger")
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-flaggerkube.conf"
+  ;;
+*)
+  echo "The env sepcified is not valid"
+  echo ""
+  echo "Usage: deploy-services [flagger|argocd]"
+  echo ""
+  exit 1
+  ;;
+esac
+
+export KUBECONFIG
+
+# create secret used to pull container images from GitHub Packages
+kubectl create namespace apps || true
+kubectl label namespace apps istio-injection=enabled
+cat <<EOL | kubectl apply -f - -n apps
+kind: Secret
+type: kubernetes.io/dockerconfigjson
+apiVersion: v1
+metadata:
+  name: dockerconfigjson-github-com
+  labels:
+    app: app-name
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJnaGNyLmlvIjp7ImF1dGgiOiJZMkZtTTJKaFltVTZaMmh3WDJaWGREQlBSVlpxYlhoRFMyWmhVazFRTlcxQk9FMU9aRmRZV1dORU16SnVSRUpxUmc9PSJ9fX0=
+EOL
+
+# add repos to helm
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+helm repo add cert-manager https://charts.jetstack.io
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add flagger https://flagger.app
+
+helm repo update
+
+# rabbitmq
+kubectl create namespace messaging || true
+kubectl apply -f ./rabbitmq/secret.yaml --namespace messaging
+
+update_install_chart rabbitmq bitnami/rabbitmq messaging ./rabbitmq/values.yaml --version 11.9.0
+
+# istio
+kubectl create namespace istio-ingress || true
+kubectl label namespace istio-ingress istio-injection=enabled
+
+update_install_chart istio-base istio/base istio-system
+update_install_chart istiod istio/istiod istio-system
+update_install_chart istio-ingress istio/gateway istio-ingress
+
+# cert manager
+update_install_chart cert-manager cert-manager/cert-manager cert-manager ./cert-manager/values.yaml --version 1.11.0
+
+# prom-kube-stack, loki and promtail
+update_install_chart kube-prometheus-stack prometheus-community/kube-prometheus-stack monitoring ./kube-prometheus-stack/values.yaml --version 45.0.0
+update_install_chart loki grafana/loki logging ./loki/values.yaml --version 4.6.0
+update_install_chart promtail grafana/promtail logging ./promtail/values.yaml
+
+if [ "${env}" == "flagger" ]; then
+  # flagger
+  update_install_chart flagger flagger/flagger istio-ingress ./flagger/values.yaml
+  update_install_chart flagger-loadtester flagger/loadtester istio-ingress
+fi

@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -11,14 +11,14 @@ for i in "${workdir}"/* ; do
   [ ! -d "${i}" ] && continue
   chart_dir="${i}"
   chart_folder="$(basename "${i}")"
-  chart_name=${chart_folder:3}
+  chart_name="${chart_folder:3}"
 
   case $action in
   install)
     # helm dependency update "${chart_dir}"
-    helm upgrade -i ${chart_name} ${chart_dir} --namespace apps --create-namespace --atomic
+    echo helm upgrade -i "${chart_name}" "${chart_dir}" --namespace apps --create-namespace --atomic
     ;;
   uninstall)
-    helm uninstall ${chart_name} --namespace apps
+    echo helm uninstall "${chart_name}" --namespace apps
   esac
 done

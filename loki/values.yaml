@@ -10,3 +10,12 @@ minio:
   replicas: 1
 loki:
   auth_enabled: false
+monitoring:
+  selfMonitoring:
+    enabled: false
+    grafanaAgent:
+      installOperator: false
+  lokiCanary:
+    enabled: false
+test:
+  enabled: false
