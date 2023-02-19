@@ -38,10 +38,13 @@ case "${env}" in
 "flagger")
   KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-flaggerkube.conf"
   ;;
+"argo")
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-argorollouts-kube.conf"
+  ;;
 *)
   echo "The env sepcified is not valid"
   echo ""
-  echo "Usage: deploy-services [flagger|argocd]"
+  echo "Usage: deploy-services [flagger|argo]"
   echo ""
   exit 1
   ;;
@@ -50,9 +53,9 @@ esac
 export KUBECONFIG
 
 # create secret used to pull container images from GitHub Packages
-kubectl create namespace apps || true
-kubectl label namespace apps istio-injection=enabled
-cat <<EOL | kubectl apply -f - -n apps
+kubectl create namespace car-rental || true
+kubectl label namespace car-rental istio-injection=enabled
+cat <<EOL | kubectl apply -f - -n car-rental
 kind: Secret
 type: kubernetes.io/dockerconfigjson
 apiVersion: v1
@@ -71,30 +74,32 @@ helm repo add cert-manager https://charts.jetstack.io
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add flagger https://flagger.app
+helm repo add kiali https://kiali.org/helm-charts
+
 
 helm repo update
 
 # rabbitmq
-kubectl create namespace messaging || true
-kubectl apply -f ./rabbitmq/secret.yaml --namespace messaging
+# kubectl create namespace messaging || true
+# kubectl apply -f ./rabbitmq/secret.yaml --namespace messaging
 
-update_install_chart rabbitmq bitnami/rabbitmq messaging ./rabbitmq/values.yaml --version 11.9.0
+# update_install_chart rabbitmq bitnami/rabbitmq messaging ./rabbitmq/values.yaml --version 11.9.0
 
 # istio
-kubectl create namespace istio-ingress || true
-kubectl label namespace istio-ingress istio-injection=enabled
-
+kubectl create namespace istio-system || true
+kubectl label namespace istio-system istio-injection=enabled
 update_install_chart istio-base istio/base istio-system
 update_install_chart istiod istio/istiod istio-system
-update_install_chart istio-ingress istio/gateway istio-ingress
+update_install_chart istio-ingress istio/gateway istio-system ./istio/ingress-values.yaml
+update_install_chart kiali-server kiali/kiali-server istio-system
 
 # cert manager
 update_install_chart cert-manager cert-manager/cert-manager cert-manager ./cert-manager/values.yaml --version 1.11.0
 
 # prom-kube-stack, loki and promtail
-update_install_chart kube-prometheus-stack prometheus-community/kube-prometheus-stack monitoring ./kube-prometheus-stack/values.yaml --version 45.0.0
-update_install_chart loki grafana/loki logging ./loki/values.yaml --version 4.6.0
-update_install_chart promtail grafana/promtail logging ./promtail/values.yaml
+# update_install_chart kube-prometheus-stack prometheus-community/kube-prometheus-stack monitoring ./kube-prometheus-stack/values.yaml --version 45.0.0
+# update_install_chart loki grafana/loki logging ./loki/values.yaml --version 4.6.0
+# update_install_chart promtail grafana/promtail logging ./promtail/values.yaml
 
 if [ "${env}" == "flagger" ]; then
   # flagger

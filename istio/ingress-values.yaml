@@ -1,0 +1,3 @@
+service:
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: matproject2110838008-car-rental

@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: istio-gateway
+  namespace: istio-system
+spec:
+  selector:
+    app: istio-ingress
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - matproject2110838008-car-rental.westeurope.cloudapp.azure.com
+    # tls:
+    #   mode: SIMPLE
+    #   credentialName: ext-host-cert

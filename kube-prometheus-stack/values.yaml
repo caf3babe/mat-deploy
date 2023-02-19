@@ -32,27 +32,27 @@ prometheus:
     - job_name: 'location-service'
       metrics_path: '/actuator/prometheus'
       static_configs:
-      - targets: [ 'location-service.apps:8082' ]
+      - targets: [ 'location-service.car-rental:8082' ]
     - job_name: 'currency-service'
       metrics_path: '/actuator/prometheus'
       static_configs:
-      - targets: [ 'currency-service.apps:8080' ]
+      - targets: [ 'currency-service.car-rental:8080' ]
     - job_name: 'opening-hours-service'
       metrics_path: '/actuator/prometheus'
       static_configs:
-      - targets: [ 'opening-hours-service.apps:8081' ]
+      - targets: [ 'opening-hours-service.car-rental:8081' ]
     - job_name: 'car-service'
       metrics_path: '/actuator/prometheus'
       static_configs:
-      - targets: [ 'car-service.apps:8083' ]
+      - targets: [ 'car-service.car-rental:8083' ]
     - job_name: 'order-service'
       metrics_path: '/actuator/prometheus'
       static_configs:
-      - targets: [ 'order-service.apps:8084' ]
+      - targets: [ 'order-service.car-rental:8084' ]
     - job_name: 'authentication-service'
       metrics_path: '/actuator/prometheus'
       static_configs:
-      - targets: [ 'authentication-service.apps:8085' ]
+      - targets: [ 'authentication-service.car-rental:8085' ]
     - job_name: 'envoy-stats'
       metrics_path: /stats/prometheus
       kubernetes_sd_configs:

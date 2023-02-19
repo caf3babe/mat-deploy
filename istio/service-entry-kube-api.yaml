@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: k8s-api-ext
+  namespace: istio-system 
+spec:
+  hosts:
+    - kubernetes.default.svc.cluster.local
+  addresses:
+    - 172.21.0.1
+  endpoints:
+    - address: 172.21.0.1
+  exportTo:
+    - "*"
+  location: MESH_EXTERNAL
+  resolution: STATIC
+  ports:
+    - number: 443
+      name: https-k8s
+      protocol: HTTPS
