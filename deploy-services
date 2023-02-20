@@ -36,10 +36,13 @@ shift 1 || true
 
 case "${env}" in
 "flagger")
-  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-flaggerkube.conf"
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-flagger-kube.conf"
   ;;
 "argo")
-  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-argorollouts-kube.conf"
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-argo-kube.conf"
+  ;;
+"k8s")
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-k8s-kube.conf"
   ;;
 *)
   echo "The env sepcified is not valid"
@@ -92,17 +95,24 @@ update_install_chart istio-base istio/base istio-system
 update_install_chart istiod istio/istiod istio-system
 update_install_chart istio-ingress istio/gateway istio-system ./istio/ingress-values.yaml
 update_install_chart kiali-server kiali/kiali-server istio-system
+kubectl apply -f istio/service-entry-kube-api.yaml
+kubectl apply -f istio/gateway.yaml
 
 # cert manager
-update_install_chart cert-manager cert-manager/cert-manager cert-manager ./cert-manager/values.yaml --version 1.11.0
+# update_install_chart cert-manager cert-manager/cert-manager cert-manager ./cert-manager/values.yaml --version 1.11.0
 
 # prom-kube-stack, loki and promtail
-# update_install_chart kube-prometheus-stack prometheus-community/kube-prometheus-stack monitoring ./kube-prometheus-stack/values.yaml --version 45.0.0
-# update_install_chart loki grafana/loki logging ./loki/values.yaml --version 4.6.0
-# update_install_chart promtail grafana/promtail logging ./promtail/values.yaml
+update_install_chart kube-prometheus-stack prometheus-community/kube-prometheus-stack monitoring ./kube-prometheus-stack/values.yaml --version 45.0.0
+update_install_chart loki grafana/loki logging ./loki/values.yaml --version 4.6.0
+update_install_chart promtail grafana/promtail logging ./promtail/values.yaml
 
 if [ "${env}" == "flagger" ]; then
   # flagger
   update_install_chart flagger flagger/flagger istio-ingress ./flagger/values.yaml
   update_install_chart flagger-loadtester flagger/loadtester istio-ingress
+fi
+
+if [ "${env}" == "argo" ]; then
+  kubectl create namespace argo-rollouts
+  kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 fi
