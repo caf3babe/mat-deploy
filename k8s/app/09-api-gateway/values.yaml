@@ -83,7 +83,7 @@ initContainers:
   command: ['sh', '-c', 'while ! curl http://configuration-service.car-rental:8071/api-gateway/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
 - name: wait-for-discovery-service
   image: busybox
-  command: ['sh', '-c', 'while ! nc -z discovery-service.apps 8070; do sleep 2; done']
+  command: ['sh', '-c', 'while ! nc -z discovery-service.car-rental 8070; do sleep 2; done']
 
 canary:
   enabled: true

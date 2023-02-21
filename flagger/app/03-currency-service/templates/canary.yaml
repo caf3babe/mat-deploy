@@ -30,6 +30,7 @@ spec:
     trafficPolicy:
       tls:
         mode: {{ .Values.canary.istioTLS }}
+    
   analysis:
     interval: {{ .Values.canary.analysis.interval }}
     threshold: {{ .Values.canary.analysis.threshold }}

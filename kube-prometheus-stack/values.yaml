@@ -12,7 +12,7 @@ grafana:
       access: proxy
       url: http://loki-gateway.logging
       jsonData:
-        maxLines: 5000
+        maxLines: 200
 
 # alertmanager:
 #   fullnameOverride: alertmanager
@@ -26,33 +26,45 @@ grafana:
 prometheus:
   # fullnameOverride: prometheus
   prometheusSpec:
-    scrapeInterval: 1s # Set the scrape interval to every 1 seconds.
-    evaluationInterval: 1s # Evaluate rules every 1 seconds.
+    resource:
+      requests:
+        cpu: 1.7
+        mem: 2Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          storageClassName: azurefile
+          resources:
+            requests:
+              storage: 50Gi
+
     additionalScrapeConfigs:
-    - job_name: 'location-service'
-      metrics_path: '/actuator/prometheus'
-      static_configs:
-      - targets: [ 'location-service.car-rental:8082' ]
-    - job_name: 'currency-service'
-      metrics_path: '/actuator/prometheus'
-      static_configs:
-      - targets: [ 'currency-service.car-rental:8080' ]
-    - job_name: 'opening-hours-service'
-      metrics_path: '/actuator/prometheus'
-      static_configs:
-      - targets: [ 'opening-hours-service.car-rental:8081' ]
-    - job_name: 'car-service'
-      metrics_path: '/actuator/prometheus'
-      static_configs:
-      - targets: [ 'car-service.car-rental:8083' ]
-    - job_name: 'order-service'
-      metrics_path: '/actuator/prometheus'
-      static_configs:
-      - targets: [ 'order-service.car-rental:8084' ]
-    - job_name: 'authentication-service'
-      metrics_path: '/actuator/prometheus'
-      static_configs:
-      - targets: [ 'authentication-service.car-rental:8085' ]
+    # - job_name: 'location-service'
+    #   metrics_path: '/actuator/prometheus'
+    #   static_configs:
+    #   - targets: [ 'location-service.car-rental:8082' ]
+    # - job_name: 'currency-service'
+    #   metrics_path: '/actuator/prometheus'
+    #   static_configs:
+    #   - targets: [ 'currency-service.car-rental:8080' ]
+    # - job_name: 'opening-hours-service'
+    #   metrics_path: '/actuator/prometheus'
+    #   static_configs:
+    #   - targets: [ 'opening-hours-service.car-rental:8081' ]
+    # - job_name: 'car-service'
+    #   metrics_path: '/actuator/prometheus'
+    #   static_configs:
+    #   - targets: [ 'car-service.car-rental:8083' ]
+    # - job_name: 'order-service'
+    #   metrics_path: '/actuator/prometheus'
+    #   static_configs:
+    #   - targets: [ 'order-service.car-rental:8084' ]
+    # - job_name: 'authentication-service'
+    #   metrics_path: '/actuator/prometheus'
+    #   static_configs:
+    #   - targets: [ 'authentication-service.car-rental:8085' ]
     - job_name: 'envoy-stats'
       metrics_path: /stats/prometheus
       kubernetes_sd_configs:
@@ -60,7 +72,7 @@ prometheus:
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_container_port_name]
         action: keep
-        regex: '.*-envoy-prom'
+        regex: 'http-envoy-prom'
     - job_name: 'istiod'
       kubernetes_sd_configs:
       - role: endpoints
@@ -71,27 +83,3 @@ prometheus:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istiod;http-monitoring
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  

@@ -7,9 +7,9 @@ spec:
   hosts:
     - kubernetes.default.svc.cluster.local
   addresses:
-    - 172.21.0.1
+    - 10.0.0.1
   endpoints:
-    - address: 172.21.0.1
+    - address: 10.0.0.1
   exportTo:
     - "*"
   location: MESH_EXTERNAL

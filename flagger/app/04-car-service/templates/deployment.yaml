@@ -13,6 +13,8 @@ spec:
       {{- include "car-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        timestamp: {{ now | date "Mon Jan 2 15:04:05 MST 2006" }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}

@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/caf3babe/mat-app-api-gateway:main
+  repository: ghcr.io/caf3babe/mat-app-api-gateway:sha-7852a1a
   pullPolicy: Always
   tag: ""
 
@@ -67,8 +67,8 @@ env:
     value: http://loki-write.logging:3100/loki/api/v1/push
 
 ingress:
-  enabled: true
-  className: contour
+  enabled: false
+  className: istio
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -83,38 +83,38 @@ initContainers:
   command: ['sh', '-c', 'while ! curl http://configuration-service.car-rental:8071/api-gateway/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
 - name: wait-for-discovery-service
   image: busybox
-  command: ['sh', '-c', 'while ! nc -z discovery-service.apps 8070; do sleep 2; done']
+  command: ['sh', '-c', 'while ! nc -z discovery-service.car-rental 8070; do sleep 2; done']
 
 canary:
   enabled: true
   # Istio traffic policy tls can be DISABLE or ISTIO_MUTUAL
   istioTLS: DISABLE
   istioIngress:
-    enabled: false
+    enabled: true
     # Istio ingress gateway name
-    gateway: public-gateway.istio-system.svc.cluster.local
+    gateway: istio-system/istio-gateway
     # external host name eg. podinfo.example.com
-    host: 
+    host: matproject2110838008-car-rental.westeurope.cloudapp.azure.com
   analysis:
     # schedule interval (default 60s)
-    interval: 15s
+    interval: 30s
     # max number of failed metric checks before rollback
-    threshold: 10
+    threshold: 5
     # max traffic percentage routed to canary
     # percentage (0-100)
     maxWeight: 50
     # canary increment step
     # percentage (0-100)
-    stepWeight: 5
+    stepWeight: 10
   thresholds:
     # minimum req success rate (non 5xx responses)
     # percentage (0-100)
     successRate: 99
     # maximum req duration P99
     # milliseconds
-    latency: 10000
+    latency: 2000
   loadtest:
-    enabled: true
+    enabled: false
     # load tester address
     url: http://flagger-loadtester.istio-ingress/
   helmtest:

@@ -1,0 +1,5 @@
+deployment:
+  pod_annotations:
+    sidecar.istio.io/inject: "false"
+auth:
+  strategy: anonymous

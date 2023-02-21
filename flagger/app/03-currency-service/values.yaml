@@ -73,7 +73,7 @@ initContainers:
   command: ['sh', '-c', 'while ! curl http://configuration-service.car-rental:8071/currency-service/prod 2>/dev/null | jq ".propertySources | length"; do sleep 2; done']
 - name: wait-for-discovery-service
   image: busybox
-  command: ['sh', '-c', 'while ! nc -z discovery-service.apps 8070; do sleep 2; done']
+  command: ['sh', '-c', 'while ! nc -z discovery-service.car-rental 8070; do sleep 2; done']
 
 
 resources:
@@ -87,9 +87,9 @@ canary:
   istioIngress:
     enabled: false
     # Istio ingress gateway name
-    gateway: public-gateway.istio-system.svc.cluster.local
+    gateway: istio-system/istio-gateway
     # external host name eg. podinfo.example.com
-    host: 
+    host: matproject2110838008-car-rental.westeurope.cloudapp.azure.com
   analysis:
     # schedule interval (default 60s)
     interval: 15s
@@ -109,7 +109,7 @@ canary:
     # milliseconds
     latency: 10000
   loadtest:
-    enabled: true
+    enabled: false
     # load tester address
     url: http://flagger-loadtester.istio-ingress/
   helmtest:

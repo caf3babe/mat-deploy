@@ -79,14 +79,12 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add flagger https://flagger.app
 helm repo add kiali https://kiali.org/helm-charts
 
-
 helm repo update
 
 # rabbitmq
-# kubectl create namespace messaging || true
-# kubectl apply -f ./rabbitmq/secret.yaml --namespace messaging
-
-# update_install_chart rabbitmq bitnami/rabbitmq messaging ./rabbitmq/values.yaml --version 11.9.0
+kubectl create namespace messaging || true
+kubectl apply -f ./rabbitmq/secret.yaml --namespace messaging
+update_install_chart rabbitmq bitnami/rabbitmq messaging ./rabbitmq/values.yaml --version 11.9.0
 
 # istio
 kubectl create namespace istio-system || true
@@ -94,7 +92,7 @@ kubectl label namespace istio-system istio-injection=enabled
 update_install_chart istio-base istio/base istio-system
 update_install_chart istiod istio/istiod istio-system
 update_install_chart istio-ingress istio/gateway istio-system ./istio/ingress-values.yaml
-update_install_chart kiali-server kiali/kiali-server istio-system
+# update_install_chart kiali-server kiali/kiali-server istio-system ./istio/kiali-values.yaml
 kubectl apply -f istio/service-entry-kube-api.yaml
 kubectl apply -f istio/gateway.yaml
 
@@ -108,8 +106,8 @@ update_install_chart promtail grafana/promtail logging ./promtail/values.yaml
 
 if [ "${env}" == "flagger" ]; then
   # flagger
-  update_install_chart flagger flagger/flagger istio-ingress ./flagger/values.yaml
-  update_install_chart flagger-loadtester flagger/loadtester istio-ingress
+  update_install_chart flagger flagger/flagger istio-system ./flagger/values.yaml
+  # update_install_chart flagger-loadtester flagger/loadtester istio-system
 fi
 
 if [ "${env}" == "argo" ]; then
