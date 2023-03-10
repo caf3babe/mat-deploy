@@ -38,4 +38,4 @@ jobs:
           cd helm-chart-repository
           git add .
           git commit -m "packaged and updated chart index.yml"
-          git push origin main
+          git push
