@@ -22,8 +22,7 @@ jobs:
           rm -rf "${PACKAGED_CHART_DIR}"
           for DIR in ${SOURCE_CHART_DIR}/* ; do
             [ ! -d "${DIR}" ] && continue
-            echo "Helm building dependencies"
-            CHART_VERSION=$(helm show chart ${DIR} | grep version | sed "s/version: //g")
+            CHART_VERSION=$(helm show chart ${DIR} | yq '.version')
             GIT_SHA_SHORT=$(git rev-parse --short HEAD)
             RELEASE_VERSION=${CHART_VERSION}+${GIT_SHA_SHORT}
             echo "Release version will be ${RELEASE_VERSION}"
