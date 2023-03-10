@@ -1,8 +1,9 @@
+name: Package helm chart
 on:
   push:
     branches: [main]
-    paths:
-      - spinnaker/app/**
+    # paths:
+    #   - spinnaker/app/**
 jobs:
   package-and-refresh-index:
     name: Package charts and refresh index
