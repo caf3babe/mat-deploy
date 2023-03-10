@@ -5,6 +5,7 @@ on:
       - spinnaker/app/**
 jobs:
   package-and-refresh-index:
+    name: Package charts and refresh index
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,12 +16,17 @@ jobs:
           version: v3.7.0
       - name: Package charts
         run: |
-          for DIR in ./spinnaker/app/* ; do
+          SOURCE_CHART_DIR="spinnaker/app"
+          PACKAGED_CHART_DIR="helm-chart-repository/spinnaker"
+          rm -rf "${PACKAGED_CHART_DIR}"
+          for DIR in ${SOURCE_CHART_DIR}/* ; do
             [ ! -d "${DIR}" ] && continue
             echo "Helm building dependencies"
             CHART_VERSION=$(helm show chart ${DIR} | grep version | sed "s/version: //g")
             GIT_SHA_SHORT=$(git rev-parse --short HEAD)
-            helm package "${DIR}" --version "${CHART_VERSION}+${GIT_SHA_SHORT}" -d helm-chart-repository
+            RELEASE_VERSION=${CHART_VERSION}+${GIT_SHA_SHORT}
+            echo "Release version will be ${RELEASE_VERSION}"
+            helm package "${DIR}" --version "${RELEASE_VERSION}" -d "${PACKAGED_CHART_DIR}"
           done
       - name: Update index.yaml
         run: helm repo index helm-chart-repository
