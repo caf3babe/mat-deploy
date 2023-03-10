@@ -53,7 +53,7 @@ case "${env}" in
   ;;
 esac
 
-export KUBECONFIG
+# export KUBECONFIG
 
 # create secret used to pull container images from GitHub Packages
 kubectl create namespace car-rental || true

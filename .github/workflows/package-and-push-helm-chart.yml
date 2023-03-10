@@ -1,0 +1,34 @@
+on:
+  push:
+    branches: [main]
+    paths:
+      - spinnaker/app/**
+jobs:
+  package-and-refresh-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install helm
+        uses: azure/setup-helm@v1.1
+        with:
+          version: v3.7.0
+      - name: Package charts
+        run: |
+          for DIR in ./spinnaker/app/* ; do
+            [ ! -d "${DIR}" ] && continue
+            echo "Helm building dependencies"
+            CHART_VERSION=$(helm show chart ${DIR} | grep version | sed "s/version: //g")
+            GIT_SHA_SHORT=$(git rev-parse --short HEAD)
+            helm package "${DIR}" --version "${CHART_VERSION}+${GIT_SHA_SHORT}" -d helm-chart-repository
+          done
+      - name: Update index.yaml
+        run: helm repo index helm-chart-repository
+      - name: Push changes
+        run: |
+          git config --global user.email "${{github.event.pusher.email}}"
+          git config --global user.name "${{github.event.pusher.name}}"
+          cd helm-chart-repository
+          git add .
+          git commit -m "packaged and updated chart index.yml"
+          git push origin main
