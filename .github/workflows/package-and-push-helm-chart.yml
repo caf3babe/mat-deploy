@@ -26,6 +26,7 @@ jobs:
             GIT_SHA_SHORT=$(git rev-parse --short HEAD)
             RELEASE_VERSION=${CHART_VERSION}+${GIT_SHA_SHORT}
             echo "Release version will be ${RELEASE_VERSION}"
+            helm dependency update "${DIR}"
             helm package "${DIR}" --version "${RELEASE_VERSION}" -d "${PACKAGED_CHART_DIR}"
           done
       - name: Update index.yaml
