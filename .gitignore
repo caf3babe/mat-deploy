@@ -62,3 +62,5 @@ hs_err_pid*
 **/charts/mongodb-*.tgz
 **/Chart.lock
 *.tgz
+
+!helm-chart-repository/**
