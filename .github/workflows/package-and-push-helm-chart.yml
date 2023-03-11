@@ -11,6 +11,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: caf3babe.github.io
+          path: charts
       - name: Install helm
         uses: azure/setup-helm@v1.1
         with:
@@ -18,7 +23,7 @@ jobs:
       - name: Package charts
         run: |
           SOURCE_CHART_DIR="spinnaker/app"
-          PACKAGED_CHART_DIR="helm-chart-repository/spinnaker"
+          PACKAGED_CHART_DIR="charts/spinnaker"
           rm -rf "${PACKAGED_CHART_DIR}"
           for DIR in ${SOURCE_CHART_DIR}/* ; do
             [ ! -d "${DIR}" ] && continue
@@ -31,11 +36,12 @@ jobs:
           done
       - name: Update index.yaml
         run: helm repo index helm-chart-repository
+      
       - name: Push changes
         run: |
-          git config --global user.email "${{github.event.pusher.email}}"
-          git config --global user.name "${{github.event.pusher.name}}"
-          cd helm-chart-repository
+          cd charts
+          git config --global user.email "${{github.event.pusher.name}}@users.noreply.github.com"
+          git config --global user.name "GitHub Action"
           git add .
           git commit -m "packaged and updated chart index.yml"
           git push
