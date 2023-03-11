@@ -36,9 +36,9 @@ jobs:
             helm package "${DIR}" --version "${RELEASE_VERSION}" -d "${PACKAGED_CHART_DIR}"
           done
       - name: Update index.yaml
-        run: helm repo index helm-chart-repository
+        run: helm repo index charts
       
-      - name: Push changes
+      - name: Push changes to GitHub Pages repo
         run: |
           cd charts
           git config --global user.email "${{github.event.pusher.name}}@users.noreply.github.com"
