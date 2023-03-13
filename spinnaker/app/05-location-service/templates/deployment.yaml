@@ -1,16 +1,16 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: {{ include "currency-service.fullname" . }}
+  name: {{ include "location-service.fullname" . }}
   labels:
-    {{- include "currency-service.labels" . | nindent 4 }}
+    {{- include "location-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "currency-service.selectorLabels" . | nindent 6 }}
+      {{- include "location-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,13 +20,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "currency-service.selectorLabels" . | nindent 8 }}
+        {{- include "location-service.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "currency-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "location-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -76,34 +76,3 @@ spec:
       initContainers:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  strategy:
-    canary:
-      analysis:
-        templates:
-          - templateName: success-rate
-        startingStep: 2
-        args:
-          - name: service-name
-            value: {{ include "currency-service.fullname" . }}-canary.car-rental.svc.cluster.local
-      canaryService: {{ include "currency-service.fullname" . }}-canary
-      stableService: {{ include "currency-service.fullname" . }}
-      trafficRouting:
-        istio:
-          virtualService:
-            name: {{ include "currency-service.fullname" . }}-virtual-service
-            routes:
-            - primary
-      steps:
-      - setWeight: 10
-      - pause: 
-          duration: 30s
-      - setWeight: 20
-      - pause:
-          duration: 30s
-      - setWeight: 30
-      - pause: 
-          duration: 30s
-      - setWeight: 40
-      - pause: 
-          duration: 30s
-      - setWeight: 50

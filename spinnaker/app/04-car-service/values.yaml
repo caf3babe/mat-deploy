@@ -118,9 +118,9 @@ canary:
   istioIngress:
     enabled: false
     # Istio ingress gateway name
-    gateway: public-gateway.istio-system.svc.cluster.local
+    gateway: istio-system/istio-gateway
     # external host name eg. podinfo.example.com
-    host: 
+    host: matproject2110838008-car-rental.westeurope.cloudapp.azure.com
   analysis:
     # schedule interval (default 60s)
     interval: 15s
@@ -140,7 +140,7 @@ canary:
     # milliseconds
     latency: 10000
   loadtest:
-    enabled: true
+    enabled: false
     # load tester address
     url: http://flagger-loadtester.istio-ingress/
   helmtest:

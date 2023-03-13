@@ -1,5 +1,5 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: {{ include "api-gateway.fullname" . }}
   labels:
@@ -76,34 +76,4 @@ spec:
       initContainers:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  strategy:
-    canary:
-      analysis:
-        templates:
-          - templateName: success-rate
-        startingStep: 2
-        args:
-          - name: service-name
-            value: {{ include "api-gateway.fullname" . }}-canary.car-rental.svc.cluster.local
-      canaryService: {{ include "api-gateway.fullname" . }}-canary
-      stableService: {{ include "api-gateway.fullname" . }}
-      trafficRouting:
-        istio:
-          virtualService:
-            name: {{ include "api-gateway.fullname" . }}-virtual-service
-            routes:
-            - primary
-      steps:
-      - setWeight: 10
-      - pause: 
-          duration: 30s
-      - setWeight: 20
-      - pause:
-          duration: 30s
-      - setWeight: 30
-      - pause: 
-          duration: 30s
-      - setWeight: 40
-      - pause: 
-          duration: 30s
-      - setWeight: 50
+
