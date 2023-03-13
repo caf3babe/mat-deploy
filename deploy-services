@@ -44,16 +44,19 @@ case "${env}" in
 "k8s")
   KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-k8s-kube.conf"
   ;;
+"spinnaker")
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-spinnaker-tooling-kube.conf"
+  ;;
 *)
   echo "The env sepcified is not valid"
   echo ""
-  echo "Usage: deploy-services [flagger|argo]"
+  echo "Usage: deploy-services [flagger|argo|k8s|spinnaker]"
   echo ""
   exit 1
   ;;
 esac
 
-# export KUBECONFIG
+export KUBECONFIG
 
 # create secret used to pull container images from GitHub Packages
 kubectl create namespace car-rental || true
