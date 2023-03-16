@@ -45,7 +45,7 @@ case "${env}" in
   KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-k8s-kube.conf"
   ;;
 "spinnaker")
-  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-spinnaker-tooling-kube.conf"
+  KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-spinnaker-kube.conf"
   ;;
 *)
   echo "The env sepcified is not valid"
