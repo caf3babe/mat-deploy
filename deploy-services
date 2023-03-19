@@ -16,25 +16,14 @@ set -e
 
 # done
 
-update_install_chart() {
-  local release_name="${1}"
-  shift || true
-  local chart_name="${1}"
-  shift || true
-  local namespace="${1}"
-  shift || true
-  local values_file="${1}"
-  shift || true
-  local additional_args="$*"
-  helm upgrade -i "${release_name}" "${chart_name}" \
-    --atomic --namespace "${namespace}" --create-namespace --values "${values_file}" ${additional_args}
-}
+# shellcheck source=/dev/null
+source functions
 
 env="${1}"
 
 shift 1 || true
 
-case "${env}" in
+case "$env" in
 "flagger")
   KUBECONFIG="$(pwd)/../mat-infra/azure/mat-project-2110838008-flagger-kube.conf"
   ;;
@@ -116,4 +105,8 @@ fi
 if [ "${env}" == "argo" ]; then
   kubectl create namespace argo-rollouts
   kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+fi
+
+if [ "${env}" == "spinnaker" ]; then
+  update_install_chart spinnaker "https://github.com/OpsMx/spinnaker-helm/releases/download/spinnaker-2.2.13/spinnaker-2.2.13.tgz" spinnaker ./spinnaker/values.yaml --timeout 10m
 fi

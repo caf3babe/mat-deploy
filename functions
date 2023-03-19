@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+update_install_chart() {
+  local release_name="$1"
+  shift || true
+  local chart_name="$1"
+  shift || true
+  local namespace="$1"
+  shift || true
+  local values_file="$1"
+  shift || true
+  local -a additional_args
+  IFS=" " read -ra additional_args <<< "$*"
+  helm upgrade -i "$release_name" "$chart_name" \
+    --atomic --namespace "$namespace" --create-namespace --values "$values_file" "${additional_args[@]}"
+}
