@@ -27,7 +27,7 @@ jobs:
         run: |
           SOURCE_CHART_DIR="spinnaker/app"
           PACKAGED_CHART_DIR="charts/charts/spinnaker"
-          rm -rf "${PACKAGED_CHART_DIR}"
+          # keep helm charts to have different versions available # rm -rf "${PACKAGED_CHART_DIR}"
           for DIR in ${SOURCE_CHART_DIR}/* ; do
             [ ! -d "${DIR}" ] && continue
             CHART_VERSION=$(helm show chart ${DIR} | yq '.version')
