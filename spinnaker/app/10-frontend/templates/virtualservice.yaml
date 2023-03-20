@@ -8,6 +8,13 @@ spec:
   gateways:
   - istio-system/istio-gateway
   http:
-  - route:
+  - name: primary
+    route:
     - destination:
-        host: {{ include "frontend.fullname" . }} 
+        host: {{ include "frontend.fullname" . }}
+    {{- if .Values.canary.enabled }}
+      weight: {{ .Values.canary.initialBaselineWeight }}
+    - destination:
+        host: {{ include "frontend.fullname" . }}-canary
+      weight: {{ .Values.canary.initialCanaryWeigth }}
+    {{- end }}

@@ -3,23 +3,23 @@ halyard:
     create: true
     data:
       enable-canary.sh: |
-        # $HAL_COMMAND config artifact helm enable
-        # $HAL_COMMAND config artifact helm account add my-helm-account --repository https://caf3babe.github.io/charts/
-
-        # # enable Canary
-        # $HAL_COMMAND config canary enable
-        # 
-        # # add prometheus account
-        # $HAL_COMMAND config canary prometheus enable
-        # $HAL_COMMAND config canary prometheus account add my-prometheus --base-url http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
-        # 
-        # # add minio account
-        # $HAL_COMMAND config canary aws enable
-        # echo spinnakeradmin | $HAL_COMMAND config canary aws account add my-minio --bucket spin-bucket --endpoint http://spinnaker-minio.spinnaker.svc.cluster.local:9000 --access-key-id spinnakeradmin --secret-access-key
-        # $HAL_COMMAND config canary aws edit --s3-enabled true
-        # 
-        # # set defaults
-        # $HAL_COMMAND config canary edit --default-metrics-store prometheus
-        # $HAL_COMMAND config canary edit --default-metrics-account my-prometheus
-        # $HAL_COMMAND config canary edit --default-storage-account my-minio
+        $HAL_COMMAND config artifact helm enable
+        $HAL_COMMAND config artifact helm account add my-helm-account --repository https://caf3babe.github.io/charts/
+      
+        # enable Canary
+        $HAL_COMMAND config canary enable
+        
+        # add prometheus account
+        $HAL_COMMAND config canary prometheus enable
+        $HAL_COMMAND config canary prometheus account add my-prometheus --base-url http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+        
+        # add minio account
+        $HAL_COMMAND config canary aws enable
+        echo spinnakeradmin | $HAL_COMMAND config canary aws account add my-minio --bucket spin-bucket --endpoint http://spinnaker-minio.spinnaker.svc.cluster.local:9000 --access-key-id spinnakeradmin --secret-access-key
+        $HAL_COMMAND config canary aws edit --s3-enabled true
+        
+        # set defaults
+        $HAL_COMMAND config canary edit --default-metrics-store prometheus
+        $HAL_COMMAND config canary edit --default-metrics-account my-prometheus
+        $HAL_COMMAND config canary edit --default-storage-account my-minio
 
