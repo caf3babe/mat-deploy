@@ -1,0 +1,42 @@
+{
+  "applications": [
+    "frontend"
+  ],
+  "classifier": {
+    "groupWeights": {
+      "http": 100
+    }
+  },
+  "configVersion": "1",
+  "createdTimestamp": 1679301425495,
+  "createdTimestampIso": "2023-03-20T08:37:05.495Z",
+  "description": "",
+  "judge": {
+    "judgeConfigurations": {},
+    "name": "NetflixACAJudge-v1.0"
+  },
+  "metrics": [
+    {
+      "analysisConfigurations": {
+        "canary": {
+          "critical": true,
+          "direction": "decrease"
+        }
+      },
+      "groups": [
+        "http"
+      ],
+      "name": "success-rate",
+      "query": {
+        "customInlineTemplate": "PromQL:sum(irate(istio_requests_total{destination_service=~'${scope}.*',response_code!~\"4.*|5.*\"}[5m])) / sum(irate(istio_requests_total{destination_service=~'${scope}.*'}[5m]))",
+        "serviceType": "prometheus",
+        "type": "prometheus"
+      },
+      "scopeName": "default"
+    }
+  ],
+  "name": "services-success-rate",
+  "templates": {},
+  "updatedTimestamp": 1679336724903,
+  "updatedTimestampIso": "2023-03-20T18:25:24.903Z"
+}

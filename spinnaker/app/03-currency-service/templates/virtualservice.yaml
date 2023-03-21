@@ -1,0 +1,21 @@
+# do not create virtualservice in case deploying a canary release
+{{ if not .Values.canary.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "currency-service.fullname" . }}
+spec:
+  hosts: 
+  - {{ include "currency-service.fullname" . }}
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: {{ include "currency-service.fullname" . }}
+    {{- if .Values.canary.enabled }}
+      weight: {{ .Values.canary.prodWeight }}
+    - destination:
+        host: {{ include "currency-service.fullname" . }}-canary
+      weight: {{ .Values.canary.canaryWeight }}
+    {{- end }}
+{{ end }}

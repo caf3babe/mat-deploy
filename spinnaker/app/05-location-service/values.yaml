@@ -58,6 +58,7 @@ env:
     value: http://loki-write.logging:3100/loki/api/v1/push
 
 mongodb:
+  enabled: true
   fullnameOverride: location-service-db
   auth:
     rootPassword: example
@@ -80,38 +81,6 @@ resources:
 
 
 canary:
-  enabled: true
-  # Istio traffic policy tls can be DISABLE or ISTIO_MUTUAL
-  istioTLS: DISABLE
-  istioIngress:
-    enabled: false
-    # Istio ingress gateway name
-    gateway: istio-system/istio-gateway
-    # external host name eg. podinfo.example.com
-    host: matproject2110838008-car-rental.westeurope.cloudapp.azure.com
-  analysis:
-    # schedule interval (default 60s)
-    interval: 15s
-    # max number of failed metric checks before rollback
-    threshold: 10
-    # max traffic percentage routed to canary
-    # percentage (0-100)
-    maxWeight: 50
-    # canary increment step
-    # percentage (0-100)
-    stepWeight: 5
-  thresholds:
-    # minimum req success rate (non 5xx responses)
-    # percentage (0-100)
-    successRate: 99
-    # maximum req duration P99
-    # milliseconds
-    latency: 10000
-  loadtest:
-    enabled: false
-    # load tester address
-    url: http://flagger-loadtester.istio-ingress/
-  helmtest:
-    enabled: false
-    # helm tester address
-    url: http://flagger-helmtester.kube-system/
+  enabled: false
+  prodWeight: 100
+  canaryWeight: 0

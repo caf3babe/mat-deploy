@@ -1,0 +1,1793 @@
+{
+  "appConfig": {},
+  "keepWaitingPipelines": false,
+  "lastModifiedBy": "anonymous",
+  "limitConcurrent": true,
+  "schema": "1",
+  "spelEvaluator": "v4",
+  "stages": [
+    {
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "85f1d697-bfca-4365-a60e-4a27693722d7"
+          },
+          "displayName": "car-service-resources",
+          "id": "5d285369-ad2f-4cd0-9894-bdb101d502e9",
+          "matchArtifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "602b193b-9da4-46d9-b6ea-c8961040e003",
+            "name": "car-service-canary",
+            "type": "embedded/base64"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "failOnFailedExpressions": false,
+      "inputArtifacts": [
+        {
+          "account": "my-helm-account",
+          "artifact": {
+            "artifactAccount": "my-helm-account",
+            "id": "f382e9cc-a67b-4e9e-8789-c361653ab5ec",
+            "name": "car-service",
+            "type": "helm/chart",
+            "version": "0.1.0+312140c"
+          }
+        },
+        {
+          "account": "embedded-artifact",
+          "artifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "11f48b9c-b983-4512-a075-ed3c97c9bf0a",
+            "name": "valueOverrideForCanary",
+            "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
+            "type": "embedded/base64"
+          },
+          "id": null
+        }
+      ],
+      "name": "Helm template car-service",
+      "namespace": "car-rental",
+      "outputName": "car-service-canary",
+      "overrides": {},
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "restrictExecutionDuringTimeWindow": false,
+      "templateRenderer": "HELM3",
+      "type": "bakeManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "160bb9f3-1995-4280-9814-6b827e221f43"
+          },
+          "displayName": "car-service-canary",
+          "id": "f22cc214-4d63-4d93-bbb2-d6c0e1d701e0",
+          "matchArtifact": {
+            "artifactAccount": "kubernetes",
+            "id": "e47cc121-59ce-4703-abe4-7be7a0552066",
+            "reference": "car-service-canary",
+            "type": "kubernetes/deployment"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "manifestArtifactId": "5d285369-ad2f-4cd0-9894-bdb101d502e9",
+      "moniker": {
+        "app": "api-gateway"
+      },
+      "name": "Car Service Deployment",
+      "namespaceOverride": "car-rental",
+      "refId": "2",
+      "requiredArtifactIds": [],
+      "requiredArtifacts": [],
+      "requisiteStageRefIds": [
+        "1"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "artifact",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "namespace": "car-rental",
+          "services": [
+            "api-gateway-canary"
+          ]
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "9290304f-b059-4743-a701-15093c1af79e"
+          },
+          "displayName": "api-gateway",
+          "id": "95fa2c4d-53d1-46d4-873a-b65a4840b405",
+          "matchArtifact": {
+            "artifactAccount": "kubernetes",
+            "id": "24a8488e-2efa-4036-a50e-b59192a93b51",
+            "reference": "api-gateway",
+            "type": "kubernetes/deployment"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "manifestArtifactId": "b3f91c3b-107a-4328-93de-3f36d207bf61",
+      "moniker": {
+        "app": "api-gateway"
+      },
+      "name": "Currency Service Deployment",
+      "namespaceOverride": "car-rental",
+      "refId": "3",
+      "requiredArtifactIds": [],
+      "requiredArtifacts": [],
+      "requisiteStageRefIds": [
+        "4"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "artifact",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "namespace": "car-rental",
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "0147a29a-b493-4613-9559-b29948ba88aa"
+          },
+          "displayName": "currency-service-resources",
+          "id": "b3f91c3b-107a-4328-93de-3f36d207bf61",
+          "matchArtifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "414a3898-42f2-49a4-9316-2f0bc16da790",
+            "name": "currency-service-canary",
+            "type": "embedded/base64"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "inputArtifacts": [
+        {
+          "account": "my-helm-account",
+          "artifact": {
+            "artifactAccount": "my-helm-account",
+            "id": "ef575b4b-e6bc-46a9-9fb3-efaeba32161f",
+            "name": "currency-service",
+            "type": "helm/chart",
+            "version": "0.1.0+312140c"
+          }
+        },
+        {
+          "account": "embedded-artifact",
+          "artifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "831d577f-c062-4c82-8458-3e445f2ff893",
+            "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
+            "type": "embedded/base64"
+          },
+          "id": null
+        }
+      ],
+      "name": "Helm template currency-service",
+      "namespace": "car-rental",
+      "outputName": "currency-service-canary",
+      "overrides": {},
+      "rawOverrides": false,
+      "refId": "4",
+      "requisiteStageRefIds": [],
+      "templateRenderer": "HELM3",
+      "type": "bakeManifest"
+    },
+    {
+      "analysisType": "realTime",
+      "canaryConfig": {
+        "baselineAnalysisOffsetInMins": "",
+        "canaryAnalysisIntervalMins": "1",
+        "canaryConfigId": "805c709a-0782-4635-9031-083e22d5eb8a",
+        "lifetimeDuration": "PT0H5M",
+        "metricsAccountName": "my-prometheus",
+        "scopes": [
+          {
+            "controlLocation": "car-rental",
+            "controlScope": ".*-service",
+            "experimentLocation": "car-rental",
+            "experimentScope": ".*-service-canary",
+            "extendedScopeParams": {},
+            "scopeName": "default",
+            "step": 2
+          }
+        ],
+        "scoreThresholds": {
+          "marginal": "75",
+          "pass": "80"
+        },
+        "storageAccountName": "my-minio"
+      },
+      "name": "Canary Analysis",
+      "refId": "5",
+      "requisiteStageRefIds": [
+        "3",
+        "21",
+        "22",
+        "2"
+      ],
+      "type": "kayentaCanary"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "currencyVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "currency-gateway"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "currency-gateway"
+                    },
+                    "weight": 80
+                  },
+                  {
+                    "destination": {
+                      "host": "currency-gateway-canary"
+                    },
+                    "weight": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "api-gateway"
+      },
+      "name": "Canary 20%",
+      "namespaceOverride": "car-rental",
+      "refId": "6",
+      "requiredArtifactIds": [],
+      "requiredArtifacts": [],
+      "requisiteStageRefIds": [
+        "11"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "currencyVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "currency-gateway"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "currency-gateway"
+                    },
+                    "weight": 70
+                  },
+                  {
+                    "destination": {
+                      "host": "currency-gateway-canary"
+                    },
+                    "weight": 30
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "api-gateway"
+      },
+      "name": "Canary 30%",
+      "namespaceOverride": "car-rental",
+      "refId": "7",
+      "requisiteStageRefIds": [
+        "15"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "currencyVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "currency-gateway"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "currency-gateway"
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "destination": {
+                      "host": "currency-gateway-canary"
+                    },
+                    "weight": 40
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "api-gateway"
+      },
+      "name": "Canary 40%",
+      "namespaceOverride": "car-rental",
+      "refId": "8",
+      "requisiteStageRefIds": [
+        "12"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "currencyVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "currency-gateway"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "currency-gateway"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "destination": {
+                      "host": "currency-gateway-canary"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "api-gateway"
+      },
+      "name": "Canary 50%",
+      "namespaceOverride": "car-rental",
+      "refId": "9",
+      "requisiteStageRefIds": [
+        "13"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "11",
+      "requisiteStageRefIds": [
+        "16"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "12",
+      "requisiteStageRefIds": [
+        "7"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "13",
+      "requisiteStageRefIds": [
+        "8"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "14",
+      "requisiteStageRefIds": [
+        "9"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "15",
+      "requisiteStageRefIds": [
+        "6"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "currency-gateway"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "currency-gateway"
+                    },
+                    "weight": 90
+                  },
+                  {
+                    "destination": {
+                      "host": "currency-gateway-canary"
+                    },
+                    "weight": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "frontend"
+      },
+      "name": "Canary 10%",
+      "namespaceOverride": "car-rental",
+      "refId": "16",
+      "requisiteStageRefIds": [
+        "3"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "85f1d697-bfca-4365-a60e-4a27693722d7"
+          },
+          "displayName": "location-service-resources",
+          "id": "5d285369-ad2f-4cd0-9894-bdb101d502e9",
+          "matchArtifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "602b193b-9da4-46d9-b6ea-c8961040e003",
+            "name": "location-service-canary",
+            "type": "embedded/base64"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "failOnFailedExpressions": false,
+      "inputArtifacts": [
+        {
+          "account": "my-helm-account",
+          "artifact": {
+            "artifactAccount": "my-helm-account",
+            "id": "f382e9cc-a67b-4e9e-8789-c361653ab5ec",
+            "name": "location-service",
+            "type": "helm/chart",
+            "version": "0.1.0+312140c"
+          }
+        },
+        {
+          "account": "embedded-artifact",
+          "artifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "11f48b9c-b983-4512-a075-ed3c97c9bf0a",
+            "name": "valueOverrideForCanary",
+            "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
+            "type": "embedded/base64"
+          },
+          "id": null
+        }
+      ],
+      "name": "Helm template location-service",
+      "namespace": "car-rental",
+      "outputName": "location-service-canary",
+      "overrides": {},
+      "refId": "19",
+      "requisiteStageRefIds": [],
+      "restrictExecutionDuringTimeWindow": false,
+      "templateRenderer": "HELM3",
+      "type": "bakeManifest"
+    },
+    {
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "0faeb8ce-d331-4da4-aa86-98c97de67437"
+          },
+          "displayName": "order-service-canary",
+          "id": "41018fce-e1f7-41f3-bd07-0a2c298513cd",
+          "matchArtifact": {
+            "artifactAccount": "embedded-artifact",
+            "customKind": false,
+            "id": "cc5fd8aa-3fdd-4e99-8af7-f1f9c89ead09",
+            "name": "order-service-canary",
+            "type": "embedded/base64"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "inputArtifacts": [
+        {
+          "account": "my-helm-account",
+          "artifact": {
+            "artifactAccount": "my-helm-account",
+            "id": "ce2c0f6d-0a05-47b1-a9da-70650168c89e",
+            "name": "order-service",
+            "type": "helm/chart",
+            "version": "0.1.0+312140c"
+          }
+        },
+        {
+          "account": "embedded-artifact",
+          "artifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "c56f0ed7-beb3-418c-894f-7c8d0d850227",
+            "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
+            "type": "embedded/base64"
+          },
+          "id": null
+        }
+      ],
+      "name": "Helm template order-service",
+      "namespace": "car-rental",
+      "outputName": "order-service-canary",
+      "overrides": {},
+      "refId": "20",
+      "requisiteStageRefIds": [],
+      "templateRenderer": "HELM3",
+      "type": "bakeManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "73abf8f5-105d-400c-a75b-b0a1c63fd34f"
+          },
+          "displayName": "location-service-resources",
+          "id": "33fd5c75-aad1-45e1-a6f1-f3ada8b63825",
+          "matchArtifact": {
+            "artifactAccount": "kubernetes",
+            "id": "da19f919-efab-4e9b-acd6-f44264634190",
+            "reference": "location-service-canary",
+            "type": "kubernetes/deployment"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "manifestArtifactId": "5d285369-ad2f-4cd0-9894-bdb101d502e9",
+      "moniker": {
+        "app": "frontend"
+      },
+      "name": "Location Service Deployment",
+      "namespaceOverride": "car-rental",
+      "refId": "21",
+      "requisiteStageRefIds": [
+        "19"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "artifact",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "expectedArtifacts": [
+        {
+          "defaultArtifact": {
+            "customKind": true,
+            "id": "73abf8f5-105d-400c-a75b-b0a1c63fd34f"
+          },
+          "displayName": "order-service-resources",
+          "id": "33fd5c75-aad1-45e1-a6f1-f3ada8b63825",
+          "matchArtifact": {
+            "artifactAccount": "kubernetes",
+            "id": "da19f919-efab-4e9b-acd6-f44264634190",
+            "reference": "order-service-canary",
+            "type": "kubernetes/deployment"
+          },
+          "useDefaultArtifact": false,
+          "usePriorArtifact": false
+        }
+      ],
+      "manifestArtifactId": "41018fce-e1f7-41f3-bd07-0a2c298513cd",
+      "moniker": {
+        "app": "frontend"
+      },
+      "name": "Order Service Deployment",
+      "namespaceOverride": "car-rental",
+      "refId": "22",
+      "requisiteStageRefIds": [
+        "20"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "artifact",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "car-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "car-service"
+                    },
+                    "weight": 90
+                  },
+                  {
+                    "destination": {
+                      "host": "car-service-canary"
+                    },
+                    "weight": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "car-service"
+      },
+      "name": "Canary 10%",
+      "namespaceOverride": "car-rental",
+      "refId": "44",
+      "requisiteStageRefIds": [
+        "2"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "45",
+      "requisiteStageRefIds": [
+        "44"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "car-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "car-service"
+                    },
+                    "weight": 80
+                  },
+                  {
+                    "destination": {
+                      "host": "car-service-canary"
+                    },
+                    "weight": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "car-service"
+      },
+      "name": "Canary 20%",
+      "namespaceOverride": "car-rental",
+      "refId": "46",
+      "requisiteStageRefIds": [
+        "45"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "47",
+      "requisiteStageRefIds": [
+        "46"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "car-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "car-service"
+                    },
+                    "weight": 70
+                  },
+                  {
+                    "destination": {
+                      "host": "car-service-canary"
+                    },
+                    "weight": 30
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "car-service"
+      },
+      "name": "Canary 30%",
+      "namespaceOverride": "car-rental",
+      "refId": "48",
+      "requisiteStageRefIds": [
+        "47"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "49",
+      "requisiteStageRefIds": [
+        "48"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "car-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "car-service"
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "destination": {
+                      "host": "car-service-canary"
+                    },
+                    "weight": 40
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "car-service"
+      },
+      "name": "Canary 40%",
+      "namespaceOverride": "car-rental",
+      "refId": "50",
+      "requisiteStageRefIds": [
+        "49"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "51",
+      "requisiteStageRefIds": [
+        "50"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "car-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "car-service"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "destination": {
+                      "host": "car-service-canary"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "car-service"
+      },
+      "name": "Canary 50%",
+      "namespaceOverride": "car-rental",
+      "refId": "52",
+      "requisiteStageRefIds": [
+        "51"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "53",
+      "requisiteStageRefIds": [
+        "52"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "location-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "location-service"
+                    },
+                    "weight": 90
+                  },
+                  {
+                    "destination": {
+                      "host": "location-service-canary"
+                    },
+                    "weight": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "location-service"
+      },
+      "name": "Canary 10%",
+      "namespaceOverride": "car-rental",
+      "refId": "24",
+      "requisiteStageRefIds": [
+        "21"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "25",
+      "requisiteStageRefIds": [
+        "24"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "location-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "location-service"
+                    },
+                    "weight": 80
+                  },
+                  {
+                    "destination": {
+                      "host": "location-service-canary"
+                    },
+                    "weight": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "location-service"
+      },
+      "name": "Canary 20%",
+      "namespaceOverride": "car-rental",
+      "refId": "26",
+      "requisiteStageRefIds": [
+        "25"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "27",
+      "requisiteStageRefIds": [
+        "26"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "location-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "location-service"
+                    },
+                    "weight": 70
+                  },
+                  {
+                    "destination": {
+                      "host": "location-service-canary"
+                    },
+                    "weight": 30
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "location-service"
+      },
+      "name": "Canary 30%",
+      "namespaceOverride": "car-rental",
+      "refId": "28",
+      "requisiteStageRefIds": [
+        "27"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "29",
+      "requisiteStageRefIds": [
+        "28"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "location-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "location-service"
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "destination": {
+                      "host": "location-service-canary"
+                    },
+                    "weight": 40
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "location-service"
+      },
+      "name": "Canary 40%",
+      "namespaceOverride": "car-rental",
+      "refId": "30",
+      "requisiteStageRefIds": [
+        "29"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "31",
+      "requisiteStageRefIds": [
+        "30"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "location-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "location-service"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "destination": {
+                      "host": "location-service-canary"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "location-service"
+      },
+      "name": "Canary 50%",
+      "namespaceOverride": "car-rental",
+      "refId": "32",
+      "requisiteStageRefIds": [
+        "31"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "33",
+      "requisiteStageRefIds": [
+        "32"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "order-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "order-service"
+                    },
+                    "weight": 90
+                  },
+                  {
+                    "destination": {
+                      "host": "order-service-canary"
+                    },
+                    "weight": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "order-service"
+      },
+      "name": "Canary 10%",
+      "namespaceOverride": "car-rental",
+      "refId": "34",
+      "requisiteStageRefIds": [
+        "22"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "35",
+      "requisiteStageRefIds": [
+        "34"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "order-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "order-service"
+                    },
+                    "weight": 80
+                  },
+                  {
+                    "destination": {
+                      "host": "order-service-canary"
+                    },
+                    "weight": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "order-service"
+      },
+      "name": "Canary 20%",
+      "namespaceOverride": "car-rental",
+      "refId": "36",
+      "requisiteStageRefIds": [
+        "35"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "37",
+      "requisiteStageRefIds": [
+        "36"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "order-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "order-service"
+                    },
+                    "weight": 70
+                  },
+                  {
+                    "destination": {
+                      "host": "order-service-canary"
+                    },
+                    "weight": 30
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "order-service"
+      },
+      "name": "Canary 30%",
+      "namespaceOverride": "car-rental",
+      "refId": "38",
+      "requisiteStageRefIds": [
+        "37"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "39",
+      "requisiteStageRefIds": [
+        "38"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "order-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "order-service"
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "destination": {
+                      "host": "order-service-canary"
+                    },
+                    "weight": 40
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "order-service"
+      },
+      "name": "Canary 40%",
+      "namespaceOverride": "car-rental",
+      "refId": "40",
+      "requisiteStageRefIds": [
+        "39"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "41",
+      "requisiteStageRefIds": [
+        "40"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    },
+    {
+      "account": "default",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "order-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "order-service"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "destination": {
+                      "host": "order-service-canary"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "moniker": {
+        "app": "order-service"
+      },
+      "name": "Canary 50%",
+      "namespaceOverride": "car-rental",
+      "refId": "42",
+      "requisiteStageRefIds": [
+        "41"
+      ],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    },
+    {
+      "name": "Wait 30s",
+      "refId": "43",
+      "requisiteStageRefIds": [
+        "42"
+      ],
+      "type": "wait",
+      "waitTime": 60
+    }
+  ],
+  "triggers": [],
+  "updateTs": "1679415288000"
+}

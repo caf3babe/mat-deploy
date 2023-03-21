@@ -87,5 +87,5 @@ initContainers:
 
 canary:
   enabled: false
-  initialBaselineWeight: 90
-  initialCanaryWeigth: 10
+  prodWeight: 100
+  canaryWeight: 0

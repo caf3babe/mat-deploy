@@ -1,7 +1,8 @@
+{{ if not .Values.canary.enabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ include "api-gateway.fullname" . }}-virtual-service
+  name: {{ include "api-gateway.fullname" . }}
 spec:
   hosts: 
   - matproject2110838008-car-rental.westeurope.cloudapp.azure.com
@@ -10,14 +11,13 @@ spec:
   http:
   - name: primary
     match:
-      uri: 
-        prefix: /api
+      - uri: 
+          prefix: /api
     route:
     - destination:
         host: {{ include "api-gateway.fullname" . }}
-    {{- if .Values.canary.enabled }}
-      weight: {{ .Values.canary.initialBaselineWeight }}
+      weight: {{ .Values.canary.prodWeight }}
     - destination:
         host: {{ include "api-gateway.fullname" . }}-canary
-      weight: {{ .Values.canary.initialCanaryWeigth }}
-    {{- end }}
+      weight: {{ .Values.canary.canaryWeight }}
+{{ end }}
