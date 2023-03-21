@@ -9,6 +9,9 @@ spec:
   - istio-system/istio-gateway
   http:
   - name: primary
+    match:
+      uri: 
+        prefix: /api
     route:
     - destination:
         host: {{ include "api-gateway.fullname" . }}
