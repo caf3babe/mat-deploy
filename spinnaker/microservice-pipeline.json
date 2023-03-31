@@ -34,7 +34,7 @@
             "id": "f382e9cc-a67b-4e9e-8789-c361653ab5ec",
             "name": "car-service",
             "type": "helm/chart",
-            "version": "0.1.0+312140c"
+            "version": "0.1.0+ea94fd7"
           }
         },
         {
@@ -45,8 +45,7 @@
             "name": "valueOverrideForCanary",
             "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
             "type": "embedded/base64"
-          },
-          "id": null
+          }
         }
       ],
       "name": "Helm template car-service",
@@ -115,12 +114,12 @@
             "customKind": true,
             "id": "9290304f-b059-4743-a701-15093c1af79e"
           },
-          "displayName": "api-gateway",
+          "displayName": "currency-service-canary",
           "id": "95fa2c4d-53d1-46d4-873a-b65a4840b405",
           "matchArtifact": {
             "artifactAccount": "kubernetes",
             "id": "24a8488e-2efa-4036-a50e-b59192a93b51",
-            "reference": "api-gateway",
+            "reference": "currency-service-canary",
             "type": "kubernetes/deployment"
           },
           "useDefaultArtifact": false,
@@ -178,7 +177,7 @@
             "id": "ef575b4b-e6bc-46a9-9fb3-efaeba32161f",
             "name": "currency-service",
             "type": "helm/chart",
-            "version": "0.1.0+312140c"
+            "version": "0.1.0+ea94fd7"
           }
         },
         {
@@ -188,8 +187,7 @@
             "id": "831d577f-c062-4c82-8458-3e445f2ff893",
             "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
             "type": "embedded/base64"
-          },
-          "id": null
+          }
         }
       ],
       "name": "Helm template currency-service",
@@ -242,17 +240,14 @@
       "cloudProvider": "kubernetes",
       "manifests": [
         {
-          "currencyVersion": "networking.istio.io/v1alpha3",
+          "apiVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "currency-gateway"
+            "name": "currency-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "currency-service"
             ],
             "http": [
               {
@@ -260,13 +255,13 @@
                 "route": [
                   {
                     "destination": {
-                      "host": "currency-gateway"
+                      "host": "currency-service"
                     },
                     "weight": 80
                   },
                   {
                     "destination": {
-                      "host": "currency-gateway-canary"
+                      "host": "currency-service-canary"
                     },
                     "weight": 20
                   }
@@ -306,14 +301,11 @@
           "currencyVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "currency-gateway"
+            "name": "currency-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "currency-service"
             ],
             "http": [
               {
@@ -321,13 +313,13 @@
                 "route": [
                   {
                     "destination": {
-                      "host": "currency-gateway"
+                      "host": "currency-service"
                     },
                     "weight": 70
                   },
                   {
                     "destination": {
-                      "host": "currency-gateway-canary"
+                      "host": "currency-service-canary"
                     },
                     "weight": 30
                   }
@@ -368,11 +360,8 @@
             "name": "currency-gateway"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "currency-gateway"
             ],
             "http": [
               {
@@ -424,14 +413,11 @@
           "currencyVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "currency-gateway"
+            "name": "currency-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "currency-service"
             ],
             "http": [
               {
@@ -439,13 +425,13 @@
                 "route": [
                   {
                     "destination": {
-                      "host": "currency-gateway"
+                      "host": "currency-service"
                     },
                     "weight": 50
                   },
                   {
                     "destination": {
-                      "host": "currency-gateway-canary"
+                      "host": "currency-service-canary"
                     },
                     "weight": 50
                   }
@@ -528,14 +514,11 @@
           "apiVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "currency-gateway"
+            "name": "currency-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "currency-service"
             ],
             "http": [
               {
@@ -543,13 +526,13 @@
                 "route": [
                   {
                     "destination": {
-                      "host": "currency-gateway"
+                      "host": "currency-service"
                     },
                     "weight": 90
                   },
                   {
                     "destination": {
-                      "host": "currency-gateway-canary"
+                      "host": "currency-service-canary"
                     },
                     "weight": 10
                   }
@@ -607,7 +590,7 @@
             "id": "f382e9cc-a67b-4e9e-8789-c361653ab5ec",
             "name": "location-service",
             "type": "helm/chart",
-            "version": "0.1.0+312140c"
+            "version": "0.1.0+ea94fd7"
           }
         },
         {
@@ -618,8 +601,7 @@
             "name": "valueOverrideForCanary",
             "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
             "type": "embedded/base64"
-          },
-          "id": null
+          }
         }
       ],
       "name": "Helm template location-service",
@@ -660,7 +642,7 @@
             "id": "ce2c0f6d-0a05-47b1-a9da-70650168c89e",
             "name": "order-service",
             "type": "helm/chart",
-            "version": "0.1.0+312140c"
+            "version": "0.1.0+ea94fd7"
           }
         },
         {
@@ -670,8 +652,7 @@
             "id": "c56f0ed7-beb3-418c-894f-7c8d0d850227",
             "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWUKbW9uZ29kYjoKICBlbmFibGVkOiBmYWxzZQ==",
             "type": "embedded/base64"
-          },
-          "id": null
+          }
         }
       ],
       "name": "Helm template order-service",
@@ -778,11 +759,8 @@
             "name": "car-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "car-service"
             ],
             "http": [
               {
@@ -846,11 +824,8 @@
             "name": "car-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "car-service"
             ],
             "http": [
               {
@@ -914,11 +889,8 @@
             "name": "car-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "car-service"
             ],
             "http": [
               {
@@ -982,11 +954,8 @@
             "name": "car-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "car-service"
             ],
             "http": [
               {
@@ -1050,11 +1019,8 @@
             "name": "car-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "car-service"
             ],
             "http": [
               {
@@ -1118,11 +1084,8 @@
             "name": "location-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "location-service"
             ],
             "http": [
               {
@@ -1186,11 +1149,8 @@
             "name": "location-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "location-service"
             ],
             "http": [
               {
@@ -1254,11 +1214,8 @@
             "name": "location-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "location-service"
             ],
             "http": [
               {
@@ -1322,11 +1279,8 @@
             "name": "location-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "location-service"
             ],
             "http": [
               {
@@ -1390,11 +1344,8 @@
             "name": "location-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "location-service"
             ],
             "http": [
               {
@@ -1458,11 +1409,8 @@
             "name": "order-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "order-service"
             ],
             "http": [
               {
@@ -1526,11 +1474,8 @@
             "name": "order-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "order-service"
             ],
             "http": [
               {
@@ -1594,11 +1539,8 @@
             "name": "order-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "order-service"
             ],
             "http": [
               {
@@ -1662,11 +1604,8 @@
             "name": "order-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "order-service"
             ],
             "http": [
               {
@@ -1730,11 +1669,8 @@
             "name": "order-service"
           },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
             "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+              "order-service"
             ],
             "http": [
               {
@@ -1789,5 +1725,5 @@
     }
   ],
   "triggers": [],
-  "updateTs": "1679415288000"
+  "updateTs": "1679419966000"
 }
