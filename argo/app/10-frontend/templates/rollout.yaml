@@ -66,6 +66,7 @@ spec:
       analysis:
         templates:
           - templateName: success-rate
+          - templateName: duration
         startingStep: 2
         args:
           - name: service-name

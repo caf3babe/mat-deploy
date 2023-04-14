@@ -8,6 +8,12 @@ These repo holds all helm charts used for deploying the car-rental application. 
 ./deploy-services flagger
 ```
 
+## Deployment of argo and other services
+```bash
+# install everything for flagger
+./deploy-services argo
+```
+
 ## Deploy services for spinnaker
 ```bash
 # install everything for flagger
