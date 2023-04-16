@@ -15,7 +15,7 @@ for i in "${workdir}"/* ; do
 
   case $action in
   install)
-    # helm dependency update "${chart_dir}"
+    helm dependency update "${chart_dir}"
     helm upgrade -i "${chart_name}" "${chart_dir}" --namespace car-rental --create-namespace --atomic
     ;;
   uninstall)

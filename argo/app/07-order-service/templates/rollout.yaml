@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ include "location-service.fullname" . }}
+  name: {{ include "order-service.fullname" . }}
   labels:
-    {{- include "location-service.labels" . | nindent 4 }}
+    {{- include "order-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "location-service.selectorLabels" . | nindent 6 }}
+      {{- include "order-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,13 +20,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "location-service.selectorLabels" . | nindent 8 }}
+        {{- include "order-service.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "location-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "order-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -84,16 +84,18 @@ spec:
         startingStep: 2
         args:
           - name: service-name
-            value: {{ include "location-service.fullname" . }}-canary.car-rental.svc.cluster.local
-      canaryService: {{ include "location-service.fullname" . }}-canary
-      stableService: {{ include "location-service.fullname" . }}
+            value: {{ include "order-service.fullname" . }}-canary
+      canaryService: {{ include "order-service.fullname" . }}-canary
+      stableService: {{ include "order-service.fullname" . }}
       trafficRouting:
         istio:
           virtualService:
-            name: {{ include "location-service.fullname" . }}-virtual-service
+            name: {{ include "order-service.fullname" . }}-virtual-service
             routes:
             - primary
       steps:
+      - pause:
+          duration: 30s
       - setWeight: 10
       - pause: 
           duration: 30s

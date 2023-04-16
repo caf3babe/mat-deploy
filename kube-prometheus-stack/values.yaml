@@ -26,6 +26,9 @@ grafana:
 prometheus:
   # fullnameOverride: prometheus
   prometheusSpec:
+    scrapeInterval: 5s
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
     resource:
       requests:
         cpu: 1.7
@@ -34,8 +37,8 @@ prometheus:
       volumeClaimTemplate:
         spec:
           accessModes:
-            - ReadWriteMany
-          storageClassName: azurefile
+            - ReadWriteOnce
+          storageClassName: default
           resources:
             requests:
               storage: 50Gi

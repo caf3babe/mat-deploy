@@ -67,10 +67,10 @@ spec:
         templates:
           - templateName: success-rate
           - templateName: duration
-        startingStep: 2
+        startingStep: 0
         args:
           - name: service-name
-            value: {{ include "frontend.fullname" . }}-canary.car-rental.svc.cluster.local
+            value: {{ include "frontend.fullname" . }}-canary
       canaryService: {{ include "frontend.fullname" . }}-canary
       stableService: {{ include "frontend.fullname" . }}
       trafficRouting:
@@ -80,6 +80,8 @@ spec:
             routes:
             - primary
       steps:
+      - pause:
+          duration: 30s
       - setWeight: 10
       - pause: 
           duration: 30s

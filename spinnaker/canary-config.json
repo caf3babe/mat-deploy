@@ -1,15 +1,15 @@
 {
   "applications": [
-    "frontend"
+    "car-rental"
   ],
   "classifier": {
     "groupWeights": {
-      "http": 100
+      "Group 1": 100
     }
   },
   "configVersion": "1",
-  "createdTimestamp": 1679301425495,
-  "createdTimestampIso": "2023-03-20T08:37:05.495Z",
+  "createdTimestamp": 1681641285945,
+  "createdTimestampIso": "2023-04-16T10:34:45.945Z",
   "description": "",
   "judge": {
     "judgeConfigurations": {},
@@ -19,24 +19,44 @@
     {
       "analysisConfigurations": {
         "canary": {
-          "critical": true,
           "direction": "decrease"
         }
       },
       "groups": [
-        "http"
+        "Group 1"
       ],
       "name": "success-rate",
       "query": {
-        "customInlineTemplate": "PromQL:sum(irate(istio_requests_total{destination_service=~'${scope}.*',response_code!~\"4.*|5.*\"}[5m])) / sum(irate(istio_requests_total{destination_service=~'${scope}.*'}[5m]))",
+        "customFilterTemplate": null,
+        "customInlineTemplate": "PromQL:sum(irate(istio_requests_total{destination_service_name='${scope}',response_code!~\\\"4.*|5.*\\\"}[5m])) / sum(irate(istio_requests_total{destination_service_name='${scope}'}[5m]))",
+        "queryType": "PROMQL",
+        "serviceType": "prometheus",
+        "type": "prometheus"
+      },
+      "scopeName": "default"
+    },
+    {
+      "analysisConfigurations": {
+        "canary": {
+          "direction": "increase"
+        }
+      },
+      "groups": [
+        "Group 1"
+      ],
+      "name": "duration",
+      "query": {
+        "customFilterTemplate": null,
+        "customInlineTemplate": "PromQL:histogram_quantile(0.95, sum(rate(istio_request_duration_milliseconds_bucket{destination_service_name='${scope}'}[5m])) by (le))",
+        "queryType": "PROMQL",
         "serviceType": "prometheus",
         "type": "prometheus"
       },
       "scopeName": "default"
     }
   ],
-  "name": "services-success-rate",
+  "name": "canary-metrics",
   "templates": {},
-  "updatedTimestamp": 1679336724903,
-  "updatedTimestampIso": "2023-03-20T18:25:24.903Z"
+  "updatedTimestamp": 1681641285945,
+  "updatedTimestampIso": "2023-04-16T10:34:45.945Z"
 }

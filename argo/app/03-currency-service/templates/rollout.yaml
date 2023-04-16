@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ include "car-service.fullname" . }}
+  name: {{ include "currency-service.fullname" . }}
   labels:
-    {{- include "car-service.labels" . | nindent 4 }}
+    {{- include "currency-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "car-service.selectorLabels" . | nindent 6 }}
+      {{- include "currency-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,13 +20,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "car-service.selectorLabels" . | nindent 8 }}
+        {{- include "currency-service.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "car-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "currency-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -84,16 +84,18 @@ spec:
         startingStep: 2
         args:
           - name: service-name
-            value: {{ include "car-service.fullname" . }}-canary.car-rental.svc.cluster.local
-      canaryService: {{ include "car-service.fullname" . }}-canary
-      stableService: {{ include "car-service.fullname" . }}
+            value: {{ include "currency-service.fullname" . }}-canary
+      canaryService: {{ include "currency-service.fullname" . }}-canary
+      stableService: {{ include "currency-service.fullname" . }}
       trafficRouting:
         istio:
           virtualService:
-            name: {{ include "car-service.fullname" . }}-virtual-service
+            name: {{ include "currency-service.fullname" . }}-virtual-service
             routes:
             - primary
       steps:
+      - pause: 
+          duration: 30s
       - setWeight: 10
       - pause: 
           duration: 30s

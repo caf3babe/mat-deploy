@@ -81,10 +81,11 @@ spec:
       analysis:
         templates:
           - templateName: success-rate
-        startingStep: 2
+          - templateName: duration
+        startingStep: 3
         args:
           - name: service-name
-            value: {{ include "api-gateway.fullname" . }}-canary.car-rental.svc.cluster.local
+            value: {{ include "api-gateway.fullname" . }}-canary
       canaryService: {{ include "api-gateway.fullname" . }}-canary
       stableService: {{ include "api-gateway.fullname" . }}
       trafficRouting:
@@ -94,6 +95,8 @@ spec:
             routes:
             - primary
       steps:
+      - pause:
+          duration: 30s
       - setWeight: 10
       - pause: 
           duration: 30s
