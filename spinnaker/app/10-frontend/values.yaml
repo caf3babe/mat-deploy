@@ -29,6 +29,6 @@ autoscaling:
   targetCPUUtilizationPercentage: 75
 
 canary:
-  enabled: false
-  initialBaselineWeight: 90
-  initialCanaryWeigth: 10
+  isCanary: false
+  initialBaselineWeight: 100
+  initialCanaryWeigth: 0

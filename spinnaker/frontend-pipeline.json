@@ -43,7 +43,7 @@
             "artifactAccount": "embedded-artifact",
             "id": "11f48b9c-b983-4512-a075-ed3c97c9bf0a",
             "name": "valueOverrideForCanary",
-            "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IGZhbHNlCiAgaW5pdGlhbEJhc2VsaW5lV2VpZ2h0OiA5MAogIGluaXRpYWxDYW5hcnlXZWlndGg6IDEw",
+            "reference": "Y2FuYXJ5OgogIGlzQ2FuYXJ5OiB0cnVl",
             "type": "embedded/base64"
           }
         }
@@ -181,6 +181,15 @@
             "type": "helm/chart",
             "version": "0.0.1+4862555"
           }
+        },
+        {
+          "account": "embedded-artifact",
+          "artifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "8db8c7d7-aca2-40bf-80c8-65b2e0692761",
+            "reference": "Y2FuYXJ5OgogIGlzQ2FuYXJ5OiBmYWxzZQogIGluaXRpYWxCYXNlbGluZVdlaWdodDogOTAKICBpbml0aWFsQ2FuYXJ5V2VpZ3RoOiAxMA==",
+            "type": "embedded/base64"
+          }
         }
       ],
       "name": "Helm template baseline",
@@ -198,7 +207,7 @@
       "canaryConfig": {
         "baselineAnalysisOffsetInMins": "",
         "canaryAnalysisIntervalMins": "1",
-        "canaryConfigId": "805c709a-0782-4635-9031-083e22d5eb8a",
+        "canaryConfigId": "0a1758b7-7e0f-4bbf-95cc-0f42dc61cd81",
         "lifetimeDuration": "PT0H5M",
         "metricsAccountName": "my-prometheus",
         "scopes": [
@@ -228,21 +237,19 @@
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
-      "manifests": [
+      "location": "car-rental",
+      "manifestName": "virtualservice frontend-virtual-service",
+      "mode": "static",
+      "name": "20% traffic onto canary",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
         {
-          "apiVersion": "networking.istio.io/v1alpha3",
-          "kind": "VirtualService",
-          "metadata": {
-            "name": "frontend-virtual-service"
-          },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
-            "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
-            ],
             "http": [
               {
                 "name": "primary",
@@ -265,45 +272,28 @@
           }
         }
       ],
-      "moniker": {
-        "app": "frontend"
-      },
-      "name": "Canary 20%",
-      "namespaceOverride": "car-rental",
       "refId": "6",
-      "requiredArtifactIds": [],
-      "requiredArtifacts": [],
       "requisiteStageRefIds": [
         "11"
       ],
-      "skipExpressionEvaluation": false,
       "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
+      "type": "patchManifest"
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
-      "manifests": [
+      "location": "car-rental",
+      "manifestName": "virtualservice frontend-virtual-service",
+      "mode": "static",
+      "name": "30% traffic onto canary",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
         {
-          "apiVersion": "networking.istio.io/v1alpha3",
-          "kind": "VirtualService",
-          "metadata": {
-            "name": "frontend-virtual-service"
-          },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
-            "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
-            ],
             "http": [
               {
                 "name": "primary",
@@ -326,43 +316,28 @@
           }
         }
       ],
-      "moniker": {
-        "app": "frontend"
-      },
-      "name": "Canary 30%",
-      "namespaceOverride": "car-rental",
       "refId": "7",
       "requisiteStageRefIds": [
         "15"
       ],
-      "skipExpressionEvaluation": false,
       "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
+      "type": "patchManifest"
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
-      "manifests": [
+      "location": "car-rental",
+      "manifestName": "virtualservice frontend-virtual-service",
+      "mode": "static",
+      "name": "40% traffic onto canary",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
         {
-          "apiVersion": "networking.istio.io/v1alpha3",
-          "kind": "VirtualService",
-          "metadata": {
-            "name": "frontend-virtual-service"
-          },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
-            "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
-            ],
             "http": [
               {
                 "name": "primary",
@@ -385,43 +360,28 @@
           }
         }
       ],
-      "moniker": {
-        "app": "frontend"
-      },
-      "name": "Canary 40%",
-      "namespaceOverride": "car-rental",
       "refId": "8",
       "requisiteStageRefIds": [
         "12"
       ],
-      "skipExpressionEvaluation": false,
       "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
+      "type": "patchManifest"
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
-      "manifests": [
+      "location": "car-rental",
+      "manifestName": "virtualservice frontend-virtual-service",
+      "mode": "static",
+      "name": "50% traffic onto canary",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
         {
-          "apiVersion": "networking.istio.io/v1alpha3",
-          "kind": "VirtualService",
-          "metadata": {
-            "name": "frontend-virtual-service"
-          },
           "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
-            "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
-            ],
             "http": [
               {
                 "name": "primary",
@@ -444,25 +404,12 @@
           }
         }
       ],
-      "moniker": {
-        "app": "frontend"
-      },
-      "name": "Canary 50%",
-      "namespaceOverride": "car-rental",
       "refId": "9",
       "requisiteStageRefIds": [
         "13"
       ],
-      "skipExpressionEvaluation": false,
       "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
+      "type": "patchManifest"
     },
     {
       "account": "default",
@@ -529,6 +476,15 @@
       "waitTime": 30
     }
   ],
-  "triggers": [],
-  "updateTs": "1679344178000"
+  "triggers": [
+    {
+      "enabled": true,
+      "payloadConstraints": {
+        "action": "start"
+      },
+      "source": "frontend-canary-release",
+      "type": "webhook"
+    }
+  ],
+  "updateTs": "1681669760000"
 }
