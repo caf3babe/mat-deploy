@@ -1,4 +1,4 @@
-kubectl patch pv/pvc-6179b7b2-3b6f-4243-853f-987742630e8e -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}'
+kubectl patch pv/pvc-67e0eb9e-1575-428e-8e6c-82edf9d29b74 -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}'
 helm uninstall kube-prometheus-stack -n monitoring
 kubectl delete pvc/prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0 -n monitoring
 

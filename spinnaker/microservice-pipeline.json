@@ -201,41 +201,6 @@
       "type": "bakeManifest"
     },
     {
-      "analysisType": "realTime",
-      "canaryConfig": {
-        "baselineAnalysisOffsetInMins": "",
-        "canaryAnalysisIntervalMins": "1",
-        "canaryConfigId": "805c709a-0782-4635-9031-083e22d5eb8a",
-        "lifetimeDuration": "PT0H5M",
-        "metricsAccountName": "my-prometheus",
-        "scopes": [
-          {
-            "controlLocation": "car-rental",
-            "controlScope": ".*-service",
-            "experimentLocation": "car-rental",
-            "experimentScope": ".*-service-canary",
-            "extendedScopeParams": {},
-            "scopeName": "default",
-            "step": 2
-          }
-        ],
-        "scoreThresholds": {
-          "marginal": "75",
-          "pass": "80"
-        },
-        "storageAccountName": "my-minio"
-      },
-      "name": "Canary Analysis",
-      "refId": "5",
-      "requisiteStageRefIds": [
-        "3",
-        "21",
-        "22",
-        "2"
-      ],
-      "type": "kayentaCanary"
-    },
-    {
       "account": "default",
       "cloudProvider": "kubernetes",
       "manifests": [
@@ -1722,8 +1687,126 @@
       ],
       "type": "wait",
       "waitTime": 60
+    },
+    {
+      "analysisType": "realTime",
+      "canaryConfig": {
+        "canaryAnalysisIntervalMins": "1",
+        "canaryConfigId": "819db5ee-4f2c-4106-8906-31a2e3c95deb",
+        "lifetimeDuration": "PT0H5M",
+        "metricsAccountName": "my-prometheus",
+        "scopes": [
+          {
+            "controlLocation": "car-rental",
+            "controlScope": "currency-service",
+            "experimentLocation": "car-rental",
+            "experimentScope": "currency-service-canary",
+            "extendedScopeParams": {},
+            "scopeName": "default",
+            "step": 59
+          }
+        ],
+        "scoreThresholds": {},
+        "storageAccountName": "my-minio"
+      },
+      "name": "Canary Analysis Currency Service",
+      "refId": "54",
+      "requisiteStageRefIds": [
+        "3"
+      ],
+      "type": "kayentaCanary"
+    },
+    {
+      "analysisType": "realTime",
+      "canaryConfig": {
+        "canaryAnalysisIntervalMins": "1",
+        "canaryConfigId": "819db5ee-4f2c-4106-8906-31a2e3c95deb",
+        "lifetimeDuration": "PT0H5M",
+        "metricsAccountName": "my-prometheus",
+        "scopes": [
+          {
+            "controlLocation": "car-rental",
+            "controlScope": "car-service",
+            "experimentLocation": "car-rental",
+            "experimentScope": "car-service-canary",
+            "extendedScopeParams": {},
+            "scopeName": "default",
+            "step": 60
+          }
+        ],
+        "scoreThresholds": {},
+        "storageAccountName": "my-minio"
+      },
+      "name": "Canary Analysis Car Service",
+      "refId": "55",
+      "requisiteStageRefIds": [
+        "2"
+      ],
+      "type": "kayentaCanary"
+    },
+    {
+      "analysisType": "realTime",
+      "canaryConfig": {
+        "canaryAnalysisIntervalMins": "1",
+        "canaryConfigId": "819db5ee-4f2c-4106-8906-31a2e3c95deb",
+        "lifetimeDuration": "PT0H5M",
+        "metricsAccountName": "my-prometheus",
+        "scopes": [
+          {
+            "controlLocation": "car-retnal",
+            "controlScope": "location-service",
+            "experimentLocation": "car-rental",
+            "experimentScope": "location-service-canary",
+            "extendedScopeParams": {},
+            "scopeName": "default",
+            "step": 60
+          }
+        ],
+        "scoreThresholds": {},
+        "storageAccountName": "my-minio"
+      },
+      "name": "Canary Analysis Location Service",
+      "refId": "56",
+      "requisiteStageRefIds": [
+        "21"
+      ],
+      "type": "kayentaCanary"
+    },
+    {
+      "analysisType": "realTime",
+      "canaryConfig": {
+        "canaryAnalysisIntervalMins": "1",
+        "canaryConfigId": "819db5ee-4f2c-4106-8906-31a2e3c95deb",
+        "lifetimeDuration": "PT0H5M",
+        "metricsAccountName": "my-prometheus",
+        "scopes": [
+          {
+            "controlLocation": "car-rental",
+            "controlScope": "order-service",
+            "experimentLocation": "car-rental",
+            "experimentScope": "order-service-canary",
+            "extendedScopeParams": {},
+            "scopeName": "default",
+            "step": 60
+          }
+        ],
+        "scoreThresholds": {},
+        "storageAccountName": "my-minio"
+      },
+      "name": "Canary Analysis Order Service",
+      "refId": "57",
+      "requisiteStageRefIds": [
+        "22"
+      ],
+      "type": "kayentaCanary"
     }
   ],
-  "triggers": [],
-  "updateTs": "1679419966000"
+  "triggers": [
+    {
+      "enabled": true,
+      "source": "micro-services",
+      "type": "webhook"
+    }
+  ],
+  "updateTs": "1681751498000"
 }
