@@ -18,7 +18,7 @@
           "matchArtifact": {
             "artifactAccount": "embedded-artifact",
             "id": "602b193b-9da4-46d9-b6ea-c8961040e003",
-            "name": "api-gateway-canary",
+            "name": "api-gateway-canary-resources",
             "type": "embedded/base64"
           },
           "useDefaultArtifact": false,
@@ -34,7 +34,7 @@
             "id": "f382e9cc-a67b-4e9e-8789-c361653ab5ec",
             "name": "api-gateway",
             "type": "helm/chart",
-            "version": "0.1.0+8801bd8"
+            "version": "0.0.1+27f4a2d"
           }
         },
         {
@@ -43,7 +43,7 @@
             "artifactAccount": "embedded-artifact",
             "id": "11f48b9c-b983-4512-a075-ed3c97c9bf0a",
             "name": "valueOverrideForCanary",
-            "reference": "Y2FuYXJ5OgogIGVuYWJsZWQ6IHRydWU=",
+            "reference": "Y2FuYXJ5OgogIGlzQ2FuYXJ5OiB0cnVl",
             "type": "embedded/base64"
           }
         }
@@ -179,7 +179,16 @@
             "id": "ef575b4b-e6bc-46a9-9fb3-efaeba32161f",
             "name": "api-gateway",
             "type": "helm/chart",
-            "version": "0.1.0+a9e28e6"
+            "version": "0.0.1+27f4a2d"
+          }
+        },
+        {
+          "account": "embedded-artifact",
+          "artifact": {
+            "artifactAccount": "embedded-artifact",
+            "id": "8db8c7d7-aca2-40bf-80c8-65b2e0692761",
+            "reference": "Y2FuYXJ5OgogIGlzQ2FuYXJ5OiBmYWxzZQogIGluaXRpYWxCYXNlbGluZVdlaWdodDogOTAKICBpbml0aWFsQ2FuYXJ5V2VpZ3RoOiAxMA==",
+            "type": "embedded/base64"
           }
         }
       ],
@@ -196,9 +205,8 @@
     {
       "analysisType": "realTime",
       "canaryConfig": {
-        "baselineAnalysisOffsetInMins": "",
         "canaryAnalysisIntervalMins": "1",
-        "canaryConfigId": "805c709a-0782-4635-9031-083e22d5eb8a",
+        "canaryConfigId": "819db5ee-4f2c-4106-8906-31a2e3c95deb",
         "lifetimeDuration": "PT0H5M",
         "metricsAccountName": "my-prometheus",
         "scopes": [
@@ -209,13 +217,10 @@
             "experimentScope": "api-gateway-canary",
             "extendedScopeParams": {},
             "scopeName": "default",
-            "step": 2
+            "step": 60
           }
         ],
-        "scoreThresholds": {
-          "marginal": "75",
-          "pass": "80"
-        },
+        "scoreThresholds": {},
         "storageAccountName": "my-minio"
       },
       "name": "Canary Analysis",
@@ -228,13 +233,16 @@
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
+      "location": "car-rental",
+      "manifestName": "virtualservice api-gateway-virtual-service",
       "manifests": [
         {
           "apiVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "api-gateway"
+            "name": "api-gateway-virtual-service"
           },
           "spec": {
             "gateways": [
@@ -265,14 +273,42 @@
           }
         }
       ],
+      "mode": "static",
       "moniker": {
-        "app": "api-gateway"
+        "app": "car-rental"
       },
-      "name": "Canary 20%",
+      "name": "20% traffic onto canary",
       "namespaceOverride": "car-rental",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
+        {
+          "spec": {
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "api-gateway"
+                    },
+                    "weight": 80
+                  },
+                  {
+                    "destination": {
+                      "host": "api-gateway-canary"
+                    },
+                    "weight": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "refId": "6",
-      "requiredArtifactIds": [],
-      "requiredArtifacts": [],
       "requisiteStageRefIds": [
         "11"
       ],
@@ -289,13 +325,16 @@
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
+      "location": "car-rental",
+      "manifestName": "virtualservice api-gateway-virtual-service",
       "manifests": [
         {
           "apiVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "api-gateway"
+            "name": "api-gateway-virtual-service"
           },
           "spec": {
             "gateways": [
@@ -326,11 +365,41 @@
           }
         }
       ],
+      "mode": "static",
       "moniker": {
-        "app": "api-gateway"
+        "app": "car-rental"
       },
-      "name": "Canary 30%",
+      "name": "30% traffic onto canary",
       "namespaceOverride": "car-rental",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
+        {
+          "spec": {
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "api-gateway"
+                    },
+                    "weight": 70
+                  },
+                  {
+                    "destination": {
+                      "host": "api-gateway-canary"
+                    },
+                    "weight": 30
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "refId": "7",
       "requisiteStageRefIds": [
         "15"
@@ -348,13 +417,16 @@
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
+      "location": "car-rental",
+      "manifestName": "virtualservice api-gateway-virtual-service",
       "manifests": [
         {
           "apiVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "api-gateway"
+            "name": "api-gateway-virtual-service"
           },
           "spec": {
             "gateways": [
@@ -385,11 +457,52 @@
           }
         }
       ],
+      "mode": "static",
       "moniker": {
-        "app": "api-gateway"
+        "app": "car-rental"
       },
-      "name": "Canary 40%",
+      "name": "40% traffic onto canary",
       "namespaceOverride": "car-rental",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
+        {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": "api-gateway-virtual-service"
+          },
+          "spec": {
+            "gateways": [
+              "istio-system/istio-gateway"
+            ],
+            "hosts": [
+              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
+            ],
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "api-gateway"
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "destination": {
+                      "host": "api-gateway-canary"
+                    },
+                    "weight": 40
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "refId": "8",
       "requisiteStageRefIds": [
         "12"
@@ -407,13 +520,16 @@
     },
     {
       "account": "default",
+      "app": "car-rental",
       "cloudProvider": "kubernetes",
+      "location": "car-rental",
+      "manifestName": "virtualservice api-gateway-virtual-service",
       "manifests": [
         {
           "apiVersion": "networking.istio.io/v1alpha3",
           "kind": "VirtualService",
           "metadata": {
-            "name": "api-gateway"
+            "name": "api-gateway-virtual-service"
           },
           "spec": {
             "gateways": [
@@ -444,11 +560,41 @@
           }
         }
       ],
+      "mode": "static",
       "moniker": {
-        "app": "api-gateway"
+        "app": "car-rental"
       },
-      "name": "Canary 50%",
+      "name": "50% traffic onto canary",
       "namespaceOverride": "car-rental",
+      "options": {
+        "mergeStrategy": "strategic",
+        "record": true
+      },
+      "patchBody": [
+        {
+          "spec": {
+            "http": [
+              {
+                "name": "primary",
+                "route": [
+                  {
+                    "destination": {
+                      "host": "api-gateway"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "destination": {
+                      "host": "api-gateway-canary"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "refId": "9",
       "requisiteStageRefIds": [
         "13"
@@ -469,9 +615,9 @@
       "app": "api-gateway",
       "cloudProvider": "kubernetes",
       "location": "car-rental",
-      "manifestName": "deployment api-gateway-canary",
+      "manifestName": "deployment api-gateway",
       "mode": "static",
-      "name": "Delete Canary Deployment",
+      "name": "Promote Canary",
       "options": {
         "cascading": true
       },
@@ -486,10 +632,11 @@
       "name": "Wait 30s",
       "refId": "11",
       "requisiteStageRefIds": [
-        "16"
+        "2",
+        "3"
       ],
       "type": "wait",
-      "waitTime": 60
+      "waitTime": 30
     },
     {
       "name": "Wait 30s",
@@ -498,7 +645,7 @@
         "7"
       ],
       "type": "wait",
-      "waitTime": 60
+      "waitTime": 30
     },
     {
       "name": "Wait 30s",
@@ -507,7 +654,7 @@
         "8"
       ],
       "type": "wait",
-      "waitTime": 60
+      "waitTime": 30
     },
     {
       "name": "Wait 30s",
@@ -516,7 +663,7 @@
         "9"
       ],
       "type": "wait",
-      "waitTime": 60
+      "waitTime": 30
     },
     {
       "name": "Wait 30s",
@@ -525,103 +672,18 @@
         "6"
       ],
       "type": "wait",
-      "waitTime": 60
-    },
-    {
-      "account": "default",
-      "cloudProvider": "kubernetes",
-      "manifests": [
-        {
-          "apiVersion": "networking.istio.io/v1alpha3",
-          "kind": "VirtualService",
-          "metadata": {
-            "name": "api-gateway"
-          },
-          "spec": {
-            "gateways": [
-              "istio-system/istio-gateway"
-            ],
-            "hosts": [
-              "matproject2110838008-car-rental.westeurope.cloudapp.azure.com"
-            ],
-            "http": [
-              {
-                "name": "primary",
-                "route": [
-                  {
-                    "destination": {
-                      "host": "api-gateway"
-                    },
-                    "weight": 90
-                  },
-                  {
-                    "destination": {
-                      "host": "api-gateway-canary"
-                    },
-                    "weight": 10
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "moniker": {
-        "app": "frontend"
-      },
-      "name": "Canary 10%",
-      "namespaceOverride": "car-rental",
-      "refId": "16",
-      "requisiteStageRefIds": [
-        "3",
-        "2"
-      ],
-      "skipExpressionEvaluation": false,
-      "source": "text",
-      "trafficManagement": {
-        "enabled": false,
-        "options": {
-          "enableTraffic": false,
-          "services": []
-        }
-      },
-      "type": "deployManifest"
-    },
-    {
-      "account": "default",
-      "app": "api-gateway",
-      "cloudProvider": "kubernetes",
-      "location": "car-rental",
-      "manifestName": "serviceAccount api-gateway-canary",
-      "mode": "static",
-      "name": "Delete Canary ServiceAccount",
-      "options": {
-        "cascading": true
-      },
-      "refId": "17",
-      "requisiteStageRefIds": [
-        "10"
-      ],
-      "type": "deleteManifest"
-    },
-    {
-      "account": "default",
-      "app": "api-gateway",
-      "cloudProvider": "kubernetes",
-      "location": "car-rental",
-      "manifestName": "service api-gateway-canary",
-      "mode": "static",
-      "name": "Delete Canary ServiceAccount",
-      "options": {
-        "cascading": true
-      },
-      "refId": "18",
-      "requisiteStageRefIds": [
-        "17"
-      ],
-      "type": "deleteManifest"
+      "waitTime": 30
     }
   ],
-  "triggers": [],
-  "updateTs": "1679395517000"
+  "triggers": [
+    {
+      "enabled": true,
+      "payloadConstraints": {
+        "action": "start"
+      },
+      "source": "api-gateway",
+      "type": "webhook"
+    }
+  ],
+  "updateTs": "1681741434000"
 }

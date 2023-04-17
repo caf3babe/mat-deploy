@@ -52,12 +52,6 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
 
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
 env:
   - name: spring_profiles_active
     value: "prod"
@@ -66,17 +60,7 @@ env:
   - name: app_loki_baseurl
     value: http://loki-write.logging:3100/loki/api/v1/push
 
-ingress:
-  enabled: false
-  className: istio
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: mat-app-flagger-prod.westeurope.cloudapp.azure.com
-      paths:
-        - path: /api/
-          pathType: ImplementationSpecific
+
 initContainers:
 - name: wait-for-configuration-service
   image: badouralix/curl-jq
@@ -86,6 +70,6 @@ initContainers:
   command: ['sh', '-c', 'while ! nc -z discovery-service.car-rental 8070; do sleep 2; done']
 
 canary:
-  enabled: false
-  prodWeight: 100
-  canaryWeight: 0
+  isCanary: false
+  initialBaselineWeight: 100
+  initialCanaryWeigth: 0

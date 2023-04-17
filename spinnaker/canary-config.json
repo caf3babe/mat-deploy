@@ -8,8 +8,8 @@
     }
   },
   "configVersion": "1",
-  "createdTimestamp": 1681641285945,
-  "createdTimestampIso": "2023-04-16T10:34:45.945Z",
+  "createdTimestamp": 1681721922374,
+  "createdTimestampIso": "2023-04-17T08:58:42.374Z",
   "description": "",
   "judge": {
     "judgeConfigurations": {},
@@ -27,9 +27,7 @@
       ],
       "name": "success-rate",
       "query": {
-        "customFilterTemplate": null,
-        "customInlineTemplate": "PromQL:sum(irate(istio_requests_total{destination_service_name='${scope}',response_code!~\\\"4.*|5.*\\\"}[5m])) / sum(irate(istio_requests_total{destination_service_name='${scope}'}[5m]))",
-        "queryType": "PROMQL",
+        "customInlineTemplate": "PromQL:sum(irate(istio_requests_total{destination_service_name='${scope}',response_code!~\"4.*|5.*\"}[5m])) / sum(irate(istio_requests_total{destination_service_name='${scope}'}[5m]))",
         "serviceType": "prometheus",
         "type": "prometheus"
       },
@@ -44,11 +42,9 @@
       "groups": [
         "Group 1"
       ],
-      "name": "duration",
+      "name": "latency",
       "query": {
-        "customFilterTemplate": null,
         "customInlineTemplate": "PromQL:histogram_quantile(0.95, sum(rate(istio_request_duration_milliseconds_bucket{destination_service_name='${scope}'}[5m])) by (le))",
-        "queryType": "PROMQL",
         "serviceType": "prometheus",
         "type": "prometheus"
       },
@@ -57,6 +53,6 @@
   ],
   "name": "canary-metrics",
   "templates": {},
-  "updatedTimestamp": 1681641285945,
-  "updatedTimestampIso": "2023-04-16T10:34:45.945Z"
+  "updatedTimestamp": 1681721922374,
+  "updatedTimestampIso": "2023-04-17T08:58:42.374Z"
 }
